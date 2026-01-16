@@ -1,0 +1,66 @@
+\documentclass{ceurart}
+
+\sloppy
+
+
+\usepackage{listings}
+\lstset{breaklines=true}
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+$for(authors)$
+\author[$for(authors.affils)$$authors.affils$$sep$,$endfor$]{$authors.name$}[%
+$if(authors.orcid)$orcid=$authors.orcid$,$endif$%
+$if(authors.email)$email=$authors.email$,$endif$%
+$if(authors.url)$url=$authors.url$,$endif$%
+]
+$if(authors.cormark)$\cormark[$authors.cormark$]$endif$%
+$if(authors.fnmark)$\fnmark[$authors.fnmark$]$endif$%
+$endfor$
+
+$for(addresses)$
+\address[$addresses.id$]{$addresses.text$}
+$endfor$
+
+$if(cortext)$
+$for(cortext)$
+\cortext[$cortext.id$]{$cortext.text$}
+$endfor$
+$endif$
+
+$if(fntext)$
+$for(fntext)$
+\fntext[$fntext.id$]{$fntext.text$}
+$endfor$
+$endif$
+
+\begin{document}
+
+\copyrightyear{2022}
+\copyrightclause{Copyright for this paper by its authors.
+  Use permitted under Creative Commons License Attribution 4.0
+  International (CC BY 4.0).}
+
+%%
+%% This command is for the conference information
+\conference{Woodstock'22: Symposium on the irreproducible science,
+  June 07--11, 2022, Woodstock, NY}
+
+\title{$title$}
+
+\begin{abstract}
+$abstract$
+\end{abstract}
+\begin{keywords}
+$for(keywords)$$keywords$$sep$ \sep $endfor$
+\end{keywords}
+
+\maketitle
+
+$body$
+
+\end{document}
