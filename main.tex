@@ -1,0 +1,678 @@
+\documentclass{ceurart}
+
+\sloppy
+
+
+\usepackage{listings}
+\lstset{breaklines=true}
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+\author[1]{Arthur Vercruysse}[%
+orcid=0000-0002-0877-7063,%
+email=arthur.vercruysse@ugent.be,%
+%
+]
+\cormark[1]%
+\fnmark[1]%
+\author[1]{Ben De Meester}[%
+orcid=0000-0001-7116-9338,%
+email=ben.demeester@ugent.be,%
+%
+]
+%
+\fnmark[1]%
+\author[1]{Julian}[%
+orcid=0000-0002-9421-8566,%
+email=JulianAndres.RojasMelendez@UGent.be,%
+%
+]
+%
+\fnmark[1]%
+\author[2]{Dieter Suls}[%
+orcid=0000-0002-9421-8566,%
+email=dieter.suls@momu.be,%
+%
+]
+%
+\fnmark[1]%
+\author[2]{Tobias Hendrickx}[%
+orcid=0000-0002-9421-8566,%
+email=dieter.suls@momu.be,%
+%
+]
+%
+\fnmark[1]%
+
+\address[1]{Ghent University - IMEC,}
+\address[2]{Fashion Museum Antwerp, Nationalestraat 28, 2000 Antwerpen}
+
+\cortext[1]{Corresponding author.}
+
+\fntext[1]{These authors contributed equally.}
+
+\begin{document}
+
+\copyrightyear{2022}
+\copyrightclause{Copyright for this paper by its authors.
+  Use permitted under Creative Commons License Attribution 4.0
+  International (CC BY 4.0).}
+
+%%
+%% This command is for the conference information
+\conference{Woodstock'22: Symposium on the irreproducible science,
+  June 07--11, 2022, Woodstock, NY}
+
+\title{Museum Monitoring}
+
+\begin{abstract}
+Museums increasingly deploy environmental sensors to support the
+conservation of cultural heritage objects. While sensing technologies
+are widely available, the resulting data is typically siloed within
+proprietary dashboards and local infrastructures, limiting its reuse,
+analysis, and controlled sharing---particularly in cross-institutional
+scenarios such as object loans. This paper reports on MuMo (Museum
+Monitoring), a three-year applied research project that explored how
+dataspace principles can be applied to environmental monitoring in real
+museum settings. Rather than replacing existing systems, MuMo integrates
+semantic data modeling, Linked Data Event Streams, and Solid-based data
+governance with a legacy monitoring dashboard. This enables
+decentralized data publication, selective cross-institutional access,
+and client-side aggregation across multiple independent deployments. We
+present the system design and describe how it is used in practice
+through a set of in-use scenarios, including longitudinal analysis of
+environmental conditions, controlled data sharing during loans, and
+multi-source data integration. The paper further reflects on design
+trade-offs, particularly the choice of group-based access control
+aligned with existing curatorial workflows, despite the technical
+feasibility of finer-grained authorization. The contribution of this
+work lies in the lessons learned from deploying a dataspace-oriented
+architecture under real institutional constraints. These insights are
+relevant to a broad range of Digital Humanities projects involving
+long-running data collection, distributed governance, and interoperable
+yet non-centralized infrastructures.
+\end{abstract}
+\begin{keywords}
+Digital Humanities \sep Dataspaces \sep Solid \sep LDES \sep Museum
+Monitoring
+\end{keywords}
+
+\maketitle
+
+\section{Introduction \& Motivation}\label{introduction-motivation}
+
+Museums increasingly rely on digital infrastructures to support the
+conservation, documentation, and circulation of cultural heritage
+objects. Among these infrastructures, long-term environmental monitoring
+plays a crucial role: parameters such as temperature, humidity, and
+light exposure directly affect the preservation of artworks and are
+often contractually regulated, particularly in the context of
+inter-museum loans. As a result, monitoring data must not only be
+collected reliably, but also interpreted, analyzed, and---under specific
+conditions---shared across institutional boundaries.
+
+A wide range of sensing technologies for environmental monitoring
+already exists and is actively used in museum practice. However, these
+systems typically operate as stand-alone solutions, tightly coupled to
+proprietary dashboards or local infrastructures. As a consequence,
+monitoring data remains siloed: it is difficult to combine measurements
+across installations, to align them with other data sources, or to
+selectively share them with external partners. This fragmentation limits
+the analytical value of the data and complicates collaboration between
+institutions.
+
+These challenges are exacerbated by the realities of museum
+infrastructures. Monitoring systems are often embedded in long-lived
+legacy dashboards that were designed for local use, provide limited
+access control mechanisms, and do not support cross-institutional data
+reuse. At the same time, museums operate within strong organizational
+and governance constraints: institutional autonomy must be preserved,
+technical solutions must remain manageable by non-technical staff, and
+existing systems cannot easily be replaced.
+
+The limitations of siloed monitoring become particularly visible in loan
+scenarios, where lending institutions require access to environmental
+data produced by borrowing museums, but only for a specific subset of
+sensors and a limited time period. Existing practices often rely on
+ad-hoc data exports or manual reporting, leading to delays, duplication,
+and reduced transparency in conservation oversight.
+
+Recent work has similarly highlighted how the increasing digitization of
+museum collections exposes structural limitations in legacy monitoring
+and documentation infrastructures, particularly with respect to
+long-term traceability, institutional accountability, and resilience
+against security incidents \citep{ross2024digital}.
+
+This paper reports on MuMo (Museum Monitoring), a three-year applied
+research project that explored how dataspace principles can be applied
+to environmental monitoring in real museum settings. Rather than
+proposing new sensing technologies or replacing existing platforms, MuMo
+focused on breaking down data silos by integrating semantic
+technologies, decentralized data publication, and access control
+mechanisms with existing systems and workflows. The contribution of this
+paper lies in documenting how these design choices functioned in
+practice, which trade-offs were made, and what lessons can be drawn for
+the broader Digital Humanities community.
+
+\section{Context of Use}\label{context-of-use}
+
+The MuMo (Museum Monitoring) project was a three-year applied research
+project aimed at supporting museums in the long-term monitoring of
+environmental conditions around collection objects. Many
+museums---especially smaller institutions---lack continuous insight into
+parameters such as temperature, humidity, or light exposure, despite
+these being critical for conservation and often contractually relevant
+during object loans.
+
+\subsection{Operational Setting}\label{operational-setting}
+
+MuMo was deployed in real museum environments and focused on
+low-maintenance, long-running installations. Custom ultra-low-power
+sensing hardware was developed to operate for approximately one year
+without recharging. Sensors were placed near artworks or storage
+locations and continuously measured environmental parameters. Due to the
+physical and organizational constraints of museum spaces, the system had
+to function with minimal intervention once deployed.
+
+Measurements were transmitted via The Things Network and ingested into
+an existing (legacy) monitoring dashboard. This dashboard became the
+primary operational interface for museum staff and therefore strongly
+shaped how data could be accessed, interpreted, and shared.
+
+\subsection{Legacy Dashboard
+Constraints}\label{legacy-dashboard-constraints}
+
+The existing dashboard provided:
+
+\begin{itemize}
+\tightlist
+\item
+  User and group management, including recursively defined groups
+\item
+  Node management corresponding to deployed sensors
+\item
+  Basic visualization through simple time-series graphs
+\end{itemize}
+
+Access control was \textbf{group-based and coarse-grained}, sufficient
+for internal monitoring within a single institution but not designed for
+cross-institutional collaboration. Importantly, the dashboard could not
+be replaced or fundamentally re-engineered within the scope of the
+project, requiring MuMo to operate within these constraints.
+
+\subsection{Cross-Institutional Access and
+Loans}\label{cross-institutional-access-and-loans}
+
+A central real-world use case was \textbf{the monitoring of artworks
+during loans between museums}. Lending institutions often require
+insight into the environmental conditions under which an object is kept
+while on loan, without being granted broader access to the borrowing
+museum's infrastructure or internal data.
+
+In practice, this requirement translates into:
+
+\begin{itemize}
+\tightlist
+\item
+  access limited to a subset of sensors,
+\item
+  bounded by the duration of the loan,
+\item
+  manageable by non-technical museum staff.
+\end{itemize}
+
+Although often described as ``fine-grained access control,'' the actual
+operational need is \textbf{group-level authorization}: sensors
+associated with a specific loan can be grouped, and access to that group
+can be granted temporarily to another institution.
+
+\subsection{Requirements for Data
+Sharing}\label{requirements-for-data-sharing}
+
+These scenarios impose several practical requirements:
+
+\begin{itemize}
+\tightlist
+\item
+  Data must be shareable across \textbf{institutional boundaries}.
+\item
+  Access must respect existing group-based authorization practices.
+\item
+  Users must be able to access data originating from multiple museum
+  setups.
+\item
+  Identity management cannot assume a single central authority.
+\end{itemize}
+
+These requirements motivated an architecture in which monitoring data
+could be published, discovered, and accessed across organizational
+boundaries, while remaining compatible with legacy systems and
+established museum workflows.
+
+\section{System and Approach
+Overview}\label{system-and-approach-overview}
+
+\subsection{Dataspace Architecture Based on
+Solid}\label{dataspace-architecture-based-on-solid}
+
+MuMo adopts a \textbf{dataspace-oriented architecture} based on Solid
+principles, in which data remains under the control of the institution
+that produces it, while still being accessible across organizational
+boundaries. Rather than centralizing monitoring data, each MuMo
+deployment publishes its own data and defines access conditions under
+which external parties may consume it.
+
+This approach aligns with museum practice: institutions are unwilling to
+relinquish control over their monitoring infrastructure, yet must be
+able to selectively share data during collaborations such as object
+loans. Solid provides a conceptual and technical framework in which
+identity, access control, and data location are decoupled from any
+single application.
+
+While some recent research emphasizes cryptographic immutability and
+tamper resistance through tightly coupled sensor infrastructures,
+hardware-based attestation, and private distributed ledgers, MuMo
+instead prioritizes institutional autonomy and operational feasibility
+by enabling decentralized data publication and access control aligned
+with existing museum workflows \citep{ross2024digital}.
+
+In MuMo, Solid Pods act as \textbf{institutional data endpoints} rather
+than user-centric storage, enabling long-lived publication of monitoring
+data that remains independently governed.
+
+\subsection{Continuous Data Publication with Linked Data Event
+Streams}\label{continuous-data-publication-with-linked-data-event-streams}
+
+Environmental monitoring produces \textbf{continuous, append-only data}
+that grows over time and is rarely modified retroactively. To reflect
+this, MuMo publishes monitoring data using \textbf{Linked Data Event
+Streams (LDES)}.
+
+LDES enables consumers to:
+
+\begin{itemize}
+\tightlist
+\item
+  retrieve historical data incrementally,
+\item
+  stay synchronized with newly produced observations,
+\item
+  avoid repeated querying of centralized services.
+\end{itemize}
+
+This publication model proved particularly suitable in a
+cross-institutional setting, as it allows data consumers to process only
+the subsets of data they are authorized to access, without requiring the
+data provider to offer tailored query endpoints.
+
+\subsection{Semantic Representation of Sensors and
+Observations}\label{semantic-representation-of-sensors-and-observations}
+
+All data managed by the legacy dashboard is transformed into a semantic
+representation, including both \textbf{environmental observations} and
+\textbf{sensor configuration metadata}. This separation reflects two
+different kinds of change:
+
+\begin{itemize}
+\tightlist
+\item
+  observations evolve continuously over time,
+\item
+  sensor configurations evolve discretely when sensors are moved or
+  reconfigured.
+\end{itemize}
+
+Sensor metadata is therefore published as a \textbf{versioned event
+stream}, allowing consumers to reconstruct the context in which
+observations were produced. Group membership and location are encoded
+explicitly in the semantic descriptions, enabling downstream systems to
+reason about authorization and interpretation without consulting the
+legacy dashboard.
+
+\subsection{Group-Based Access Control as a Practical Design
+Choice}\label{group-based-access-control-as-a-practical-design-choice}
+
+Access control in MuMo deliberately mirrors the \textbf{group-based
+authorization model} already in use in the legacy dashboard. Rather than
+introducing fine-grained authorization at the level of individual
+observations, access is granted at the level of sensor groups.
+
+This choice was guided by museum practice: for loan scenarios,
+institutions require access to all monitoring data related to a specific
+object or location over a defined period. Group-level access was
+therefore found to be both sufficient and manageable, avoiding
+complexity that would hinder adoption.
+
+Authorization policies defined in the legacy system are reflected in
+access constraints on published data, allowing cross-institutional
+sharing without introducing a new access management interface.
+
+Although the underlying fragmentation strategy and event-based
+publication model would technically allow finer-grained access control
+(e.g., at the level of individual days or measurement types), MuMo
+intentionally limits authorization to group-level permissions in order
+to remain aligned with the configuration mechanisms and functional
+requirements of the legacy dashboard.
+
+\subsection{Decentralized Consumption and
+Aggregation}\label{decentralized-consumption-and-aggregation}
+
+Because each MuMo deployment publishes its data independently, consumers
+may need to combine data from multiple sources. MuMo supports this
+through a client-side dashboard that retrieves sensor descriptions
+first, determines the user's authorized scope, and then incrementally
+consumes the relevant observation streams.
+
+This approach avoids centralized aggregation while still enabling a
+unified user experience, reinforcing the dataspace principle that
+\textbf{integration occurs at the point of use}.
+
+\section{In-Use Scenarios}\label{in-use-scenarios}
+
+This section illustrates how the MuMo dataspace architecture is used in
+practice by museum professionals to analyze, share, and contextualize
+environmental monitoring data.
+
+\subsection{Scenario 1: Analyzing Environmental Conditions Over
+Time}\label{scenario-1-analyzing-environmental-conditions-over-time}
+
+The primary use of the advanced dashboard is to support museum staff in
+assessing the long-term ``health'' of collection objects by analyzing
+environmental conditions over time. Users interact with the system
+through a web-based dashboard that allows them to filter and combine
+data based on:
+
+\begin{itemize}
+\tightlist
+\item
+  location (group),
+\item
+  sensor or node,
+\item
+  type of measurement (e.g., temperature, humidity),
+\item
+  time constraints.
+\end{itemize}
+
+Using these filters, users can construct queries that follow an artwork
+throughout its lifecycle. For example, a curator can analyze how
+environmental conditions evolved while an object was stored in one room,
+then exhibited in another, and later placed in temporary storage.
+Because sensor configuration changes are published as versioned semantic
+descriptions, the system can correctly associate observations with their
+deployment context at each point in time.
+
+A key practical benefit of the Linked Data Event Streams (LDES)
+publication model is that \textbf{data filtering occurs before
+retrieval}. Rather than fetching all historical measurements and
+filtering client-side, the dashboard retrieves only the relevant
+fragments based on semantic relations and temporal constraints. For
+instance, when analyzing conditions in a specific year, only the
+corresponding fragments are accessed, avoiding unnecessary data transfer
+and improving responsiveness.
+
+This incremental and selective access is essential for long-running
+monitoring installations, where datasets grow continuously and may span
+multiple years.
+
+\subsection{Scenario 2: Cross-Institutional Access During
+Loans}\label{scenario-2-cross-institutional-access-during-loans}
+
+A second, critical scenario concerns the monitoring of artworks during
+loans between museums. Lending institutions typically require access to
+environmental data from the borrowing museum to ensure that conservation
+conditions meet agreed standards, while borrowing institutions must
+retain control over their broader monitoring infrastructure.
+
+In MuMo, this scenario is supported through \textbf{group-based access
+control aligned with Solid identities}. For a loan, the borrowing museum
+creates a dedicated group in the legacy dashboard and associates the
+relevant sensors with that group. Access to this group is then granted
+to specific Web-based identifiers belonging to the lending institution.
+
+Because access control is enforced at the level of published data
+fragments, external users can authenticate using their own WebIDs and
+access only the data streams corresponding to the loan group. No
+centralized user management or data replication is required. Once the
+loan period ends, access can be revoked by removing the external WebIDs
+from the group.
+
+This approach enables temporary, fine-grained sharing of monitoring data
+across institutional boundaries while remaining manageable for museum
+staff and compatible with existing workflows.
+
+\subsection{Scenario 3: Integrating Multiple Data
+Sources}\label{scenario-3-integrating-multiple-data-sources}
+
+In addition to supporting analysis within a single monitoring
+deployment, the advanced dashboard demonstrates the ability to
+\textbf{combine data from multiple independent MuMo data sources}. Each
+MuMo deployment publishes its monitoring data and sensor descriptions
+independently, yet follows the same semantic representation and
+event-based publication model.
+
+In practice, this allows users to access and analyze data originating
+from different museum setups within a single interface. For example, a
+user may compare environmental conditions across multiple exhibition
+spaces or institutions, provided they have the appropriate access
+rights. Because sensor metadata and observations are published as Linked
+Data Event Streams, the dashboard can discover available sensors,
+determine authorization, and incrementally retrieve data from multiple
+sources without requiring centralized aggregation.
+
+Beyond this demonstrated functionality, the same mechanisms also enable
+the \textbf{conceptual integration of external data sources} that are
+not part of the MuMo project, such as weather station measurements.
+Since both sensor metadata and observations are modeled using shared
+semantic standards, incorporating additional event streams would not
+require changes to the underlying architecture. While such external
+integrations have not yet been deployed, they directly informed the
+design of the system and illustrate how the dataspace approach supports
+extensibility and reuse.
+
+\section{Observations and Lessons
+Learned}\label{observations-and-lessons-learned}
+
+The in-use scenarios presented above highlight how specific
+architectural and modeling decisions shaped the practical use of MuMo in
+museum monitoring contexts. Rather than evaluating individual
+technologies in isolation, this section reflects on how these choices
+interacted with real-world constraints and practices.
+
+\subsection{Solid as an Institutional Boundary
+Mechanism}\label{solid-as-an-institutional-boundary-mechanism}
+
+Across all scenarios, Solid played a central role in enabling data
+sharing without centralization. By treating Solid Pods as
+\textbf{institution-level data endpoints} rather than user-centric
+storage, MuMo aligned naturally with museum governance structures.
+Institutions retain control over their monitoring data while still
+enabling external access when required.
+
+This was particularly evident in the loan scenario (Scenario 2), where
+Solid identities (WebIDs) allowed users from different institutions to
+authenticate without relying on a shared user database. Access could be
+granted and revoked by modifying group membership, supporting temporary
+collaborations without introducing new identity management workflows.
+
+\textbf{Lesson learned:} Solid is most effective in this context when
+used to represent \textbf{organizational boundaries and
+responsibilities}, rather than as a personal data store.
+
+\subsection{Linked Data Event Streams for Scalable
+Analysis}\label{linked-data-event-streams-for-scalable-analysis}
+
+The use of Linked Data Event Streams proved essential for handling the
+continuous and growing nature of monitoring data. In the analysis
+scenario (Scenario 1), LDES enabled the dashboard to retrieve only the
+relevant subsets of data based on semantic relations and temporal
+constraints, avoiding the need to fetch complete datasets and filter
+client-side.
+
+This incremental access model also facilitated multi-source analysis
+(Scenario 3), where data from multiple independent MuMo deployments
+could be consumed and combined without requiring centralized aggregation
+or bespoke query endpoints.
+
+\textbf{Lesson learned:} Event-based publication is particularly well
+suited for long-running Digital Humanities data collection, where
+datasets evolve continuously and selective access is more important than
+expressive querying.
+
+\subsection{Group-Based Access Control as a Deliberate Design
+Choice}\label{group-based-access-control-as-a-deliberate-design-choice}
+
+MuMo deliberately adopts \textbf{group-level access control}, even
+though finer-grained authorization is technically feasible within the
+chosen architecture. The use of Linked Data Event Streams combined with
+a hierarchical fragmentation strategy makes it possible to enforce
+access constraints at different levels of granularity, such as
+individual days or, with minor adaptations to the publication pipeline,
+per measurement type.
+
+In practice, these options were not activated. The legacy dashboard that
+remains authoritative for configuration and access management does not
+provide mechanisms to express such fine-grained permissions. As a
+result, only those authorization concepts that are meaningful and
+manageable within existing museum workflows were reflected in the
+generated access control configurations.
+
+This decision was particularly evident in the loan scenario, where
+group-level access proved sufficient to grant lending institutions
+visibility into relevant monitoring data without exposing unrelated
+information. Introducing finer-grained access control would have
+increased technical complexity without corresponding benefits for end
+users.
+
+\textbf{Lesson learned:} In applied Digital Humanities settings, the
+appropriate granularity of access control is determined less by
+technical capability than by the expressive power of existing
+organizational tools and practices. Designing for feasible access
+control is often more valuable than designing for maximal access
+control.
+
+\subsection{Semantic Modeling as an Enabler of
+Integration}\label{semantic-modeling-as-an-enabler-of-integration}
+
+Semantic representations based on shared observation models enabled MuMo
+to separate \textbf{data production} from \textbf{data consumption}.
+Sensor descriptions, deployment context, and observations could be
+published independently, versioned over time, and interpreted
+consistently across systems.
+
+This separation was critical in Scenario 1, where sensor relocations
+needed to be reflected correctly in longitudinal analyses, and in
+Scenario 3, where data from multiple sources could be combined as long
+as they adhered to the same semantic structures.
+
+\textbf{Lesson learned:} The value of semantic modeling in practice lies
+less in expressiveness and more in its ability to support evolution,
+reuse, and alignment across independently managed systems.
+
+\subsection{Dataspace Integration at the Point of
+Use}\label{dataspace-integration-at-the-point-of-use}
+
+Finally, the combination of Solid, LDES, semantic modeling, and
+client-side aggregation reflects a broader dataspace principle:
+\textbf{integration happens at the point of use}, not through
+centralized infrastructure.
+
+Rather than enforcing a single global schema or repository, MuMo enables
+institutions to publish data independently and allows consumers to
+integrate only what they need, when they need it. This approach proved
+compatible with legacy systems and institutional autonomy, both of which
+are common in Digital Humanities settings.
+
+\textbf{Lesson learned:} Dataspace architectures are particularly well
+suited to DH environments where data is distributed, governance is
+decentralized, and collaboration is episodic.
+
+\section{Impact for the Digital Humanities
+Community}\label{impact-for-the-digital-humanities-community}
+
+Many Digital Humanities projects rely on data that is collected
+continuously over long periods of time and embedded in local
+infrastructures, such as sensor data, annotations, or evolving metadata.
+In practice, such data often remains siloed within project-specific
+systems, limiting its reuse, comparability, and shareability across
+institutional boundaries.
+
+The experience reported in this paper suggests that
+\textbf{dataspace-oriented approaches} are well suited to such settings.
+By allowing data to remain under the control of the institution that
+produces it, while enabling integration at the point of use, dataspaces
+provide a viable alternative to centralized platforms. This is
+particularly relevant for DH collaborations involving multiple partners
+with heterogeneous governance structures and long-lived legacy systems.
+
+The use of \textbf{semantic representations as infrastructural
+connectors}, rather than as expressive modeling exercises, further
+supports interoperability in constrained environments. Lightweight
+semantic alignment enables independently managed datasets to be
+combined, extended, and reinterpreted over time, without requiring
+uniform tooling or deep semantic expertise from end users.
+
+Access control emerged as a critical dimension of data reuse. Rather
+than pursuing maximal technical expressiveness, the project highlights
+the importance of aligning authorization mechanisms with existing
+organizational practices. Group-based access control, when grounded in
+curatorial workflows, can provide sufficient protection and flexibility
+while remaining understandable and manageable in daily operation.
+
+Finally, breaking down data silos enables new forms of longitudinal and
+comparative analysis that are difficult to achieve with isolated
+systems. The ability to combine data from multiple independent
+sources---under controlled access conditions---opens opportunities for
+richer contextualization and collaboration in a wide range of Digital
+Humanities scenarios.
+
+Together, these observations point toward a pragmatic path for DH
+infrastructures that emphasizes decentralization, semantic
+interoperability, and governance-aware design over comprehensive but
+fragile integration solutions.
+
+\section{Conclusion and Future Work}\label{conclusion-and-future-work}
+
+This paper reported on MuMo (Museum Monitoring), a three-year applied
+research project that explored the use of dataspace principles for
+environmental monitoring in museum practice. By integrating semantic
+data publication, event-based access, and decentralized governance with
+existing monitoring infrastructure, MuMo addressed practical challenges
+related to long-running data collection, cross-institutional
+collaboration, and controlled data sharing.
+
+A central outcome of the project is the demonstration that
+dataspace-oriented architectures can be deployed incrementally alongside
+legacy systems. Rather than requiring centralized platforms or uniform
+tooling, MuMo shows how interoperability and data reuse can be achieved
+while preserving institutional autonomy and established workflows. The
+project further illustrates that design choices grounded in curatorial
+practice---such as group-based access control---can be both sufficient
+in practice and easier to sustain than more fine-grained alternatives.
+
+Several limitations remain. Access control is currently restricted to
+group-level permissions, reflecting the expressive capabilities of the
+legacy dashboard rather than technical constraints of the dataspace
+architecture. Future work could explore finer-grained authorization
+mechanisms, such as temporal or measurement-level access, should
+corresponding user requirements arise. In addition, while the system
+supports aggregation across multiple MuMo deployments, integrating
+external data sources beyond the project has not yet been explored in
+deployed settings.
+
+In conclusion, MuMo provides an in-use perspective on how Solid-based
+data governance, Linked Data Event Streams, and lightweight semantic
+modeling can support practical Digital Humanities workflows. The project
+highlights the value of aligning technical architectures with
+organizational realities and contributes concrete lessons for the design
+of interoperable, sustainable DH data infrastructures.
+
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

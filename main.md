@@ -1,6 +1,5 @@
 ---
 title: "Museum Monitoring"
-
 abstract: |
     Museums increasingly deploy environmental sensors to support the conservation of cultural heritage objects. While sensing technologies are widely available, the resulting data is typically siloed within proprietary dashboards and local infrastructures, limiting its reuse, analysis, and controlled sharing—particularly in cross-institutional scenarios such as object loans.
     This paper reports on MuMo (Museum Monitoring), a three-year applied research project that explored how dataspace principles can be applied to environmental monitoring in real museum settings. Rather than replacing existing systems, MuMo integrates semantic data modeling, Linked Data Event Streams, and Solid-based data governance with a legacy monitoring dashboard. This enables decentralized data publication, selective cross-institutional access, and client-side aggregation across multiple independent deployments.
