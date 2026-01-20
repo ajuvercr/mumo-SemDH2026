@@ -4,6 +4,8 @@ MuMo adopts a **dataspace-oriented architecture** based on Solid principles, in 
 
 This approach aligns with museum practice: institutions are unwilling to relinquish control over their monitoring infrastructure, yet must be able to selectively share data during collaborations such as object loans. Solid provides a conceptual and technical framework in which identity, access control, and data location are decoupled from any single application.
 
+While some recent research emphasizes cryptographic immutability and tamper resistance through tightly coupled sensor infrastructures, hardware-based attestation, and private distributed ledgers, MuMo instead prioritizes institutional autonomy and operational feasibility by enabling decentralized data publication and access control aligned with existing museum workflows [@ross2024digital].
+
 In MuMo, Solid Pods act as **institutional data endpoints** rather than user-centric storage, enabling long-lived publication of monitoring data that remains independently governed.
 
 
