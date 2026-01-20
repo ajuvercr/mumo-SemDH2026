@@ -18,7 +18,7 @@ pandoc:
 		--filter pandoc-include \
 		--template=template.tex \
   		--natbib \
-		-o main.pdf
+		-o main.tex
 	latexmk -pdf -interaction=nonstopmode -bibtex main.tex
 
 # Build a PDF into OUTDIR (keeps your project root clean)

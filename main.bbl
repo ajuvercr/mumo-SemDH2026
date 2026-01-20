@@ -1,14 +1,179 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{22}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
+\bibitem[Buyle et~al.(2016)Buyle, De~Vocht, Van~Compernolle, De~Paepe,
+  Verborgh, Vanlishout, De~Vidts, Mechant, and Mannens]{oslo2016}
+Raf Buyle, Laurens De~Vocht, Mathias Van~Compernolle, Dieter De~Paepe, Ruben
+  Verborgh, Ziggy Vanlishout, Bj{\'o}rn De~Vidts, Peter Mechant, and Erik
+  Mannens.
+\newblock Oslo: Open standards for linked organizations.
+\newblock In \emph{Proceedings of the international conference on electronic
+  governance and open society: Challenges in Eurasia}, pages 126--134, 2016.
+
+\bibitem[Capadisli et~al.(2022)Capadisli, Berners-Lee, Verborgh, and
+  Kjernsmo]{solidprotocol2022}
+Sarven Capadisli, Tim Berners-Lee, Ruben Verborgh, and Kjetil Kjernsmo.
+\newblock Solid protocol, December 2022.
+\newblock URL \url{https://solidproject.org/TR/2022/protocol-20221231}.
+
+\bibitem[Capadisli~Sarven and Berners-Lee(2024)]{wac}
+Story~Henry Capadisli~Sarven and Tim Berners-Lee.
+\newblock eb access control (wac).
+\newblock Technical report, MIT CSAIL, 2024.
+\newblock URL \url{https://solidproject.org/TR/wac}.
+
+\bibitem[Compton et~al.(2012)Compton, Barnaghi, Bermudez, Garcia-Castro,
+  Corcho, Cox, Graybeal, Hauswirth, Henson, Herzog, et~al.]{compton2012ssn}
+Michael Compton, Payam Barnaghi, Luis Bermudez, Raul Garcia-Castro, Oscar
+  Corcho, Simon Cox, John Graybeal, Manfred Hauswirth, Cory Henson, Arthur
+  Herzog, et~al.
+\newblock The ssn ontology of the w3c semantic sensor network incubator group.
+\newblock \emph{Journal of Web Semantics}, 17:\penalty0 25--32, 2012.
+
+\bibitem[{European Commission}(2026)]{semic_support_centre}
+{European Commission}.
+\newblock Linked data event streams (ldes) | semic support centre |
+  interoperable europe portal, 2026.
+\newblock URL
+  \url{https://interoperable-europe.ec.europa.eu/collection/semic-support-centre/linked-data-event-streams-ldes}.
+\newblock Accessed: 2026-01-20.
+
+\bibitem[Fenlon(2020)]{fenlon2020sustaining}
+Katrina~Simone Fenlon.
+\newblock Sustaining digital humanities collections: challenges and
+  community-centred strategies.
+\newblock \emph{International Journal of Digital Curation}, 15\penalty0
+  (1):\penalty0 13--13, 2020.
+
+\bibitem[Franklin et~al.(2005)Franklin, Halevy, and
+  Maier]{franklin2005databases}
+Michael Franklin, Alon Halevy, and David Maier.
+\newblock From databases to dataspaces: a new abstraction for information
+  management.
+\newblock \emph{ACM Sigmod Record}, 34\penalty0 (4):\penalty0 27--33, 2005.
+
+\bibitem[Halevy et~al.(2006)Halevy, Franklin, and Maier]{halevy2006principles}
+Alon Halevy, Michael Franklin, and David Maier.
+\newblock Principles of dataspace systems.
+\newblock In \emph{Proceedings of the twenty-fifth ACM SIGMOD-SIGACT-SIGART
+  symposium on Principles of database systems}, pages 1--9, 2006.
+
+\bibitem[Haller et~al.(2017)Haller, Janowicz, Cox, Lefrançois, Taylor,
+  Le~Phuoc, Lieberman, García-Castro, and Stadler]{ssn-sosa}
+Armin Haller, Krzysztof Janowicz, Simon J.~D. Cox, Maxime Lefrançois, Kerry
+  Taylor, Danh Le~Phuoc, Joshua Lieberman, Raúl García-Castro, and Claus
+  Stadler.
+\newblock Semantic sensor network ontology.
+\newblock W3c recommendation, W3C, 2017.
+\newblock URL \url{https://www.w3.org/TR/vocab-ssn/}.
+
+\bibitem[Hu et~al.(2014)Hu, Ferraiolo, Kuhn, Schnitzer, Sandlin, Miller,
+  Scarfone, et~al.]{hu2014guide}
+Vincent~C Hu, David Ferraiolo, Rick Kuhn, Adam Schnitzer, Kenneth Sandlin,
+  Robert Miller, Karen Scarfone, et~al.
+\newblock Guide to attribute based access control (abac) definition and
+  considerations.
+\newblock \emph{NIST special publication}, 800\penalty0 (162):\penalty0 1--54,
+  2014.
+
+\bibitem[{International Data Spaces Association}(2023)]{idsa2023ram4}
+{International Data Spaces Association}.
+\newblock Ids reference architecture model - {IDS-RAM} 4.0.
+\newblock Technical report, International Data Spaces Association, feb 2023.
+\newblock URL \url{https://docs.internationaldataspaces.org}.
+\newblock Accessed: [Insert Date Here].
+
+\bibitem[Lancker et~al.(2025)Lancker, Logghe, Rojas, Craene, Vanlishout, and
+  Colpaert]{VSDS2025}
+Dwight~Van Lancker, Steven Logghe, Juli{\'a}n~Andr{\'e}s Rojas, Annelies~De
+  Craene, Ziggy Vanlishout, and Pieter Colpaert.
+\newblock Semantic and technically interoperable data exchange
+  in the flanders smart data space.
+\newblock In Gianluca Demartini, Katja Hose, Maribel Acosta, Matteo Palmonari,
+  Gong Cheng, Hala Skaf-Molli, Nicolas Ferranti, Daniel Hern{\'a}ndez, and
+  Aidan Hogan, editors, \emph{The Semantic Web -- ISWC 2024}, pages 289--303,
+  Cham, 2025. Springer Nature Switzerland.
+\newblock ISBN 978-3-031-77847-6.
+
+\bibitem[Mansour et~al.(2016)Mansour, Sambra, Hawke, Zereba, Capadisli, Ghanem,
+  Aboulnaga, and Berners-Lee]{solid_24}
+Essam Mansour, Andrei~Vlad Sambra, Sandro Hawke, Maged Zereba, Sarven
+  Capadisli, Abdurrahman Ghanem, Ashraf Aboulnaga, and Tim Berners-Lee.
+\newblock Solid: A platform for decentralized social applications based on
+  linked data.
+\newblock Technical report, MIT CSAIL, 2016.
+\newblock URL \url{https://solidproject.org/TR/solid}.
+
+\bibitem[Michalski(2007)]{michalski2007ideal}
+Stefan Michalski.
+\newblock The ideal climate, risk management, the ashrae chapter, proofed
+  fluctuations, and towards a full risk analysis model.
+\newblock \emph{Experts roundtable on sustainable climate management
+  strategies}, pages 1--19, 2007.
+
+\bibitem[Rodr{\'\i}guez~Peralta and Brito(2010)]{rodriguez2010integrating}
+Laura~M Rodr{\'\i}guez~Peralta and Lina~M Brito.
+\newblock An integrating platform for environmental monitoring in museums based
+  on wireless sensor networks.
+\newblock \emph{International Journal on Advances in Networks and Services},
+  3\penalty0 (1/2):\penalty0 114--124, 2010.
+
 \bibitem[Ross(2024)]{ross2024digital}
 Dian~Marie Ross.
 \newblock \emph{DIGITAL TWINS, HARDWARE ORACLES AND DISTRIBUTED LEDGER
   TECHNOLOGIES}.
 \newblock PhD thesis, UNIVERSITY OF BRITISH COLUMBIA (Vancouver), 2024.
+
+\bibitem[Slabbinck et~al.(2023)Slabbinck, Dedecker, Vasireddy, Verborgh, and
+  Colpaert]{slabbinck2023linked}
+Wout Slabbinck, Ruben Dedecker, Sindhu Vasireddy, Ruben Verborgh, and Pieter
+  Colpaert.
+\newblock Linked data event streams in solid ldp containers.
+\newblock In \emph{Managing the Evolution and Preservation of the Data Web
+  2022}, volume 3339, pages 28--35. CEUR, 2023.
+
+\bibitem[Tardieu(2022)]{gaia-x}
+Hubert Tardieu.
+\newblock \emph{Role of Gaia-X in the European Data Space Ecosystem}, pages
+  41--59.
+\newblock 07 2022.
+\newblock ISBN 978-3-030-93974-8.
+\newblock \doi{10.1007/978-3-030-93975-5_4}.
+
+\bibitem[Tsipi et~al.(2023)Tsipi, Vouyioukas, Loumos, Kargas, and
+  Varoutas]{draas2023}
+Lefteris Tsipi, Demosthenes Vouyioukas, Georgios Loumos, Antonios Kargas, and
+  Dimitrios Varoutas.
+\newblock Digital repository as a service (d-raas): Enhancing access and
+  preservation of cultural heritage artifacts.
+\newblock \emph{Heritage}, 6\penalty0 (10):\penalty0 6881--6900, 2023.
+
+\bibitem[Tucker(2022)]{tucker2022facing}
+Joanna Tucker.
+\newblock Facing the challenge of digital sustainability as humanities
+  researchers.
+\newblock \emph{Journal of the British Academy}, 10:\penalty0 93--120, 2022.
+
+\bibitem[Van~Lancker et~al.(2021)Van~Lancker, Colpaert, Delva, Van~de Vyvere,
+  Rojas~Meléndez, Dedecker, Michiels, Buyle, De~Craene, and
+  Verborgh]{vanlancker2021ldes}
+Dwight Van~Lancker, Pieter Colpaert, Harm Delva, Brecht Van~de Vyvere, Julián
+  Rojas~Meléndez, Ruben Dedecker, Philippe Michiels, Raf Buyle, Annelies
+  De~Craene, and Ruben Verborgh.
+\newblock Publishing base registries as linked data event streams.
+\newblock In \emph{International Conference on Web Engineering}, pages 28--36.
+  Springer, 2021.
+
+\bibitem[{Verstraete, Melanie and Verbrugge, Sofie and Colle,
+  Didier}({2022})]{solid_25}
+{Verstraete, Melanie and Verbrugge, Sofie and Colle, Didier}.
+\newblock {Solid : enabler of decentralized, digital platforms ecosystems}.
+\newblock In \emph{{ITS 31st European Conference 2022, Proceedings}},
+  page~{19}, {2022}.
+\newblock URL \url{{https://itseurope.org/2022/}}.
 
 \end{thebibliography}

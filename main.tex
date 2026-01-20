@@ -115,9 +115,16 @@ inter-museum loans. As a result, monitoring data must not only be
 collected reliably, but also interpreted, analyzed, and---under specific
 conditions---shared across institutional boundaries.
 
+Conservation practice increasingly frames environmental control in terms
+of risk management and tolerable fluctuation ranges rather than a single
+``ideal'' climate, reinforcing the operational importance of continuous
+monitoring and traceable reporting \citep{michalski2007ideal}.
+
 A wide range of sensing technologies for environmental monitoring
-already exists and is actively used in museum practice. However, these
-systems typically operate as stand-alone solutions, tightly coupled to
+already exists and is actively used in museum practice, including
+long-running wireless sensor network (WSN) deployments in museum
+buildings \citep{rodriguez2010integrating}. However, these systems
+typically operate as stand-alone solutions, tightly coupled to
 proprietary dashboards or local infrastructures. As a consequence,
 monitoring data remains siloed: it is difficult to combine measurements
 across installations, to align them with other data sources, or to
@@ -149,7 +156,9 @@ against security incidents \citep{ross2024digital}.
 
 This paper reports on MuMo (Museum Monitoring), a three-year applied
 research project that explored how dataspace principles can be applied
-to environmental monitoring in real museum settings. Rather than
+to environmental monitoring in real museum settings, namely prioritizing
+incremental integration, heterogeneous sources, and governance
+\citep{franklin2005databases, halevy2006principles}. Rather than
 proposing new sensing technologies or replacing existing platforms, MuMo
 focused on breaking down data silos by integrating semantic
 technologies, decentralized data publication, and access control
@@ -259,19 +268,24 @@ Overview}\label{system-and-approach-overview}
 \subsection{Dataspace Architecture Based on
 Solid}\label{dataspace-architecture-based-on-solid}
 
-MuMo adopts a \textbf{dataspace-oriented architecture} based on Solid
-principles, in which data remains under the control of the institution
-that produces it, while still being accessible across organizational
-boundaries. Rather than centralizing monitoring data, each MuMo
-deployment publishes its own data and defines access conditions under
-which external parties may consume it.
+MuMo adopts a \textbf{dataspace-oriented architecture} based on Solid, a
+decentralized data platform designed to give data owners control over
+their data rather than centralizing it within applications
+\citep{solid_24, solid_25, solidprotocol2022}. Solid is explicitly
+designed as a decentralization framework in which data storage,
+identity, and access control are decoupled from individual applications,
+enabling data to be reused by multiple clients and actors without
+funneling all data through a centralized service
+\citep{solid_24, solid_25}.
 
 This approach aligns with museum practice: institutions are unwilling to
 relinquish control over their monitoring infrastructure, yet must be
 able to selectively share data during collaborations such as object
 loans. Solid provides a conceptual and technical framework in which
-identity, access control, and data location are decoupled from any
-single application.
+identity, authorization \citep{wac}, and data location are decoupled
+from any single application, explicitly aiming to counter the
+concentration of data within centralized platforms by restoring data
+ownership to the producing parties. .
 
 While some recent research emphasizes cryptographic immutability and
 tamper resistance through tightly coupled sensor infrastructures,
@@ -290,7 +304,17 @@ Streams}\label{continuous-data-publication-with-linked-data-event-streams}
 Environmental monitoring produces \textbf{continuous, append-only data}
 that grows over time and is rarely modified retroactively. To reflect
 this, MuMo publishes monitoring data using \textbf{Linked Data Event
-Streams (LDES)}.
+Streams (LDES)} \citep{vanlancker2021ldes, semic_support_centre}.
+
+LDES is increasingly adopted as a practical pattern for interoperable
+publication of evolving datasets, enabling replication and
+synchronization across organizational boundaries without centralized
+query services \citep{semic_support_centre}.
+
+Prior work has demonstrated the feasibility of storing and consuming
+LDES event sources within the Solid ecosystem, supporting the
+compatibility of event-stream publication with Solid-based access
+control \citep{slabbinck2023linked}.
 
 LDES enables consumers to:
 
@@ -307,7 +331,8 @@ LDES enables consumers to:
 This publication model proved particularly suitable in a
 cross-institutional setting, as it allows data consumers to process only
 the subsets of data they are authorized to access, without requiring the
-data provider to offer tailored query endpoints.
+data provider to offer tailored query endpoints
+\citep{vanlancker2021ldes}.
 
 \subsection{Semantic Representation of Sensors and
 Observations}\label{semantic-representation-of-sensors-and-observations}
@@ -326,6 +351,22 @@ different kinds of change:
   reconfigured.
 \end{itemize}
 
+The semantic representation builds on established models for describing
+sensors and observations, most notably the W3C Semantic Sensor Network
+ontology (SSN/SOSA) \citep{compton2012ssn, ssn-sosa}, which provides a
+shared conceptual framework for sensors, observations, and their
+relationships.
+
+SN/SOSA was selected in particular for its explicit separation between
+sensors, observations, and the features of interest being observed,
+enabling sensor redeployment and contextual change to be represented
+without altering historical observations \citep{compton2012ssn}.
+
+In MuMo, these concepts are instantiated using OSLO vocabularies
+\citep{oslo2016}, a Flemish Linked Data standardization framework that
+profiles and reuses international semantic standards for
+cross-organizational data exchange.
+
 Sensor metadata is therefore published as a \textbf{versioned event
 stream}, allowing consumers to reconstruct the context in which
 observations were produced. Group membership and location are encoded
@@ -341,11 +382,20 @@ authorization model} already in use in the legacy dashboard. Rather than
 introducing fine-grained authorization at the level of individual
 observations, access is granted at the level of sensor groups.
 
+At the Solid protocol level, this aligns with authorization mechanisms
+such as Web Access Control (WAC), which allow servers to enforce access
+rules on resources and their associated representations
+\citep{solidprotocol2022, wac}.
+
 This choice was guided by museum practice: for loan scenarios,
 institutions require access to all monitoring data related to a specific
-object or location over a defined period. Group-level access was
-therefore found to be both sufficient and manageable, avoiding
-complexity that would hinder adoption.
+object or location over a defined period. Prior work on access control
+has repeatedly highlighted that fine-grained authorization models, while
+expressive, introduce significant configuration and usability complexity
+in operational settings, particularly for non-technical users
+\citep{hu2014guide}. Group-level access was therefore found to be both
+sufficient and manageable, avoiding complexity that would hinder
+adoption.
 
 Authorization policies defined in the legacy system are reflected in
 access constraints on published data, allowing cross-institutional
@@ -474,6 +524,40 @@ integrations have not yet been deployed, they directly informed the
 design of the system and illustrate how the dataspace approach supports
 extensibility and reuse.
 
+\subsection{Generalizing the scenarios beyond monitoring
+systems}\label{generalizing-the-scenarios-beyond-monitoring-systems}
+
+While the scenarios above focus on environmental monitoring data, they
+also reveal a more general pattern regarding the role of contextual
+information in enabling downstream analysis. They rely on contextual
+information such as temporal validity, object location, and sensor
+deployment. In MuMo, this information was obtained from the monitoring
+infrastructure and its associated configuration data. However, the
+underlying mechanism illustrated by these scenarios does not depend on
+the specific system from which such context originates. In practice,
+museums already maintain similar forms of structured contextual
+information in a variety of collection management and repository
+systems, independent of environmental monitoring.
+
+Contemporary collection management systems and digital repositories
+often manage object metadata, temporal associations, and organizational
+context, and may support structured export mechanisms. Examples include
+repository platforms such as Omeka-S or digital repository services such
+as D-RaaS \citep{draas2023}.
+
+When such contextual information is made available in a structured and
+time-aware form, it becomes possible to derive queries that are not
+explicitly supported by the originating CMS. Instead, these queries
+emerge from the combination of temporal relations, location changes, and
+object associations at the point of use.
+
+MuMo demonstrates this principle in the domain of environmental
+monitoring, but the same mechanism can be applied more broadly to
+contextual data maintained by other institutional systems. This suggests
+that dataspace-oriented approaches can unlock additional analytical
+value from existing CMS infrastructures without requiring their
+replacement or redesign.
+
 \section{Observations and Lessons
 Learned}\label{observations-and-lessons-learned}
 
@@ -581,6 +665,17 @@ client-side aggregation reflects a broader dataspace principle:
 \textbf{integration happens at the point of use}, not through
 centralized infrastructure.
 
+Similar architectural patterns can be observed in other domain-specific
+data space initiatives, such as the Flanders Smart Data Space, where
+semantic standardization and Linked Data Event Streams are combined to
+support decentralized data publication across organizational boundaries
+\citep{VSDS2025}.
+
+More broadly, European data space initiatives emphasize federated trust,
+identity, and governance mechanisms to enable cross-organizational data
+exchange while preserving sovereignty, aligning with the
+boundary-oriented role Solid plays in MuMo \citep{idsa2023ram4, gaia-x}.
+
 Rather than enforcing a single global schema or repository, MuMo enables
 institutions to publish data independently and allows consumers to
 integrate only what they need, when they need it. This approach proved
@@ -600,6 +695,12 @@ infrastructures, such as sensor data, annotations, or evolving metadata.
 In practice, such data often remains siloed within project-specific
 systems, limiting its reuse, comparability, and shareability across
 institutional boundaries.
+
+Digital Humanities researchers have increasingly emphasized that the
+sustainability of digital resources is not only a technical issue but
+also an institutional and socio-technical one, shaped by funding
+horizons, maintenance practices, and governance constraints
+\citep{tucker2022facing, fenlon2020sustaining}.
 
 The experience reported in this paper suggests that
 \textbf{dataspace-oriented approaches} are well suited to such settings.

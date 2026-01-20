@@ -35,3 +35,16 @@ In practice, this allows users to access and analyze data originating from diffe
 
 Beyond this demonstrated functionality, the same mechanisms also enable the **conceptual integration of external data sources** that are not part of the MuMo project, such as weather station measurements. Since both sensor metadata and observations are modeled using shared semantic standards, incorporating additional event streams would not require changes to the underlying architecture. While such external integrations have not yet been deployed, they directly informed the design of the system and illustrate how the dataspace approach supports extensibility and reuse.
 
+
+## Generalizing the scenarios beyond monitoring systems
+
+While the scenarios above focus on environmental monitoring data, they also reveal a more general pattern regarding the role of contextual information in enabling downstream analysis.
+They rely on contextual information such as temporal validity, object location, and sensor deployment. In MuMo, this information was obtained from the monitoring infrastructure and its associated configuration data. However, the underlying mechanism illustrated by these scenarios does not depend on the specific system from which such context originates.
+In practice, museums already maintain similar forms of structured contextual information in a variety of collection management and repository systems, independent of environmental monitoring.
+
+Contemporary collection management systems and digital repositories often manage object metadata, temporal associations, and organizational context, and may support structured export mechanisms. Examples include repository platforms such as Omeka-S or digital repository services such as D-RaaS [@draas2023].
+
+When such contextual information is made available in a structured and time-aware form, it becomes possible to derive queries that are not explicitly supported by the originating CMS. Instead, these queries emerge from the combination of temporal relations, location changes, and object associations at the point of use.
+
+MuMo demonstrates this principle in the domain of environmental monitoring, but the same mechanism can be applied more broadly to contextual data maintained by other institutional systems. This suggests that dataspace-oriented approaches can unlock additional analytical value from existing CMS infrastructures without requiring their replacement or redesign.
+

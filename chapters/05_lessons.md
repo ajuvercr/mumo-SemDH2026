@@ -38,6 +38,10 @@ This separation was critical in Scenario 1, where sensor relocations needed to b
 
 Finally, the combination of Solid, LDES, semantic modeling, and client-side aggregation reflects a broader dataspace principle: **integration happens at the point of use**, not through centralized infrastructure.
 
+Similar architectural patterns can be observed in other domain-specific data space initiatives, such as the Flanders Smart Data Space, where semantic standardization and Linked Data Event Streams are combined to support decentralized data publication across organizational boundaries [@VSDS2025].
+
+More broadly, European data space initiatives emphasize federated trust, identity, and governance mechanisms to enable cross-organizational data exchange while preserving sovereignty, aligning with the boundary-oriented role Solid plays in MuMo [@idsa2023ram4; @gaia-x].
+
 Rather than enforcing a single global schema or repository, MuMo enables institutions to publish data independently and allows consumers to integrate only what they need, when they need it. This approach proved compatible with legacy systems and institutional autonomy, both of which are common in Digital Humanities settings.
 
 **Lesson learned:** Dataspace architectures are particularly well suited to DH environments where data is distributed, governance is decentralized, and collaboration is episodic.

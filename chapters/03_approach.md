@@ -1,8 +1,8 @@
 ## Dataspace Architecture Based on Solid
 
-MuMo adopts a **dataspace-oriented architecture** based on Solid principles, in which data remains under the control of the institution that produces it, while still being accessible across organizational boundaries. Rather than centralizing monitoring data, each MuMo deployment publishes its own data and defines access conditions under which external parties may consume it.
+MuMo adopts a **dataspace-oriented architecture** based on Solid, a decentralized data platform designed to give data owners control over their data rather than centralizing it within applications [@solid_24; @solid_25; @solidprotocol2022]. Solid is explicitly designed as a decentralization framework in which data storage, identity, and access control are decoupled from individual applications, enabling data to be reused by multiple clients and actors without funneling all data through a centralized service.
 
-This approach aligns with museum practice: institutions are unwilling to relinquish control over their monitoring infrastructure, yet must be able to selectively share data during collaborations such as object loans. Solid provides a conceptual and technical framework in which identity, access control, and data location are decoupled from any single application.
+This approach aligns with museum practice: institutions are unwilling to relinquish control over their monitoring infrastructure, yet must be able to selectively share data during collaborations such as object loans. Solid provides a conceptual and technical framework in which identity, authorization [@wac], and data location are decoupled from any single application, explicitly aiming to counter the concentration of data within centralized platforms by restoring data ownership to the producing parties.
 
 While some recent research emphasizes cryptographic immutability and tamper resistance through tightly coupled sensor infrastructures, hardware-based attestation, and private distributed ledgers, MuMo instead prioritizes institutional autonomy and operational feasibility by enabling decentralized data publication and access control aligned with existing museum workflows [@ross2024digital].
 
@@ -11,7 +11,11 @@ In MuMo, Solid Pods act as **institutional data endpoints** rather than user-cen
 
 ## Continuous Data Publication with Linked Data Event Streams
 
-Environmental monitoring produces **continuous, append-only data** that grows over time and is rarely modified retroactively. To reflect this, MuMo publishes monitoring data using **Linked Data Event Streams (LDES)**.
+Environmental monitoring produces **continuous, append-only data** that grows over time and is rarely modified retroactively. To reflect this, MuMo publishes monitoring data using **Linked Data Event Streams (LDES)** [@vanlancker2021ldes; @semic_support_centre].
+
+LDES is increasingly adopted as a practical pattern for interoperable publication of evolving datasets, enabling replication and synchronization across organizational boundaries without centralized query services [@semic_support_centre].
+
+Prior work has demonstrated the feasibility of storing and consuming LDES event sources within the Solid ecosystem, supporting the compatibility of event-stream publication with Solid-based access control [@slabbinck2023linked].
 
 LDES enables consumers to:
 
@@ -19,7 +23,7 @@ LDES enables consumers to:
 * stay synchronized with newly produced observations,
 * avoid repeated querying of centralized services.
 
-This publication model proved particularly suitable in a cross-institutional setting, as it allows data consumers to process only the subsets of data they are authorized to access, without requiring the data provider to offer tailored query endpoints.
+This publication model proved particularly suitable in a cross-institutional setting, as it allows data consumers to process only the subsets of data they are authorized to access, without requiring the data provider to offer tailored query endpoints [@vanlancker2021ldes].
 
 
 ## Semantic Representation of Sensors and Observations
@@ -29,6 +33,12 @@ All data managed by the legacy dashboard is transformed into a semantic represen
 * observations evolve continuously over time,
 * sensor configurations evolve discretely when sensors are moved or reconfigured.
 
+The semantic representation builds on established models for describing sensors and observations, most notably the W3C Semantic Sensor Network ontology (SSN/SOSA) [@compton2012ssn;@ssn-sosa], which provides a shared conceptual framework for sensors, observations, and their relationships.
+
+SSN/SOSA was selected in particular for its explicit separation between sensors, observations, and the features of interest being observed, enabling sensor redeployment and contextual change to be represented without altering historical observations [@compton2012ssn].
+
+In MuMo, these concepts are instantiated using OSLO vocabularies [@oslo2016], a Flemish Linked Data standardization framework that profiles and reuses international semantic standards for cross-organizational data exchange.
+
 Sensor metadata is therefore published as a **versioned event stream**, allowing consumers to reconstruct the context in which observations were produced. Group membership and location are encoded explicitly in the semantic descriptions, enabling downstream systems to reason about authorization and interpretation without consulting the legacy dashboard.
 
 
@@ -36,7 +46,11 @@ Sensor metadata is therefore published as a **versioned event stream**, allowing
 
 Access control in MuMo deliberately mirrors the **group-based authorization model** already in use in the legacy dashboard. Rather than introducing fine-grained authorization at the level of individual observations, access is granted at the level of sensor groups.
 
-This choice was guided by museum practice: for loan scenarios, institutions require access to all monitoring data related to a specific object or location over a defined period. Group-level access was therefore found to be both sufficient and manageable, avoiding complexity that would hinder adoption.
+At the Solid protocol level, this aligns with authorization mechanisms such as Web Access Control (WAC), which allow servers to enforce access rules on resources and their associated representations [@solidprotocol2022; @wac].
+
+This choice was guided by museum practice: for loan scenarios, institutions require access to all monitoring data related to a specific object or location over a defined period.
+Prior work on access control has repeatedly highlighted that fine-grained authorization models, while expressive, introduce significant configuration and usability complexity in operational settings, particularly for non-technical users [@hu2014guide].
+Group-level access was therefore found to be both sufficient and manageable, avoiding complexity that would hinder adoption.
 
 Authorization policies defined in the legacy system are reflected in access constraints on published data, allowing cross-institutional sharing without introducing a new access management interface.
 
