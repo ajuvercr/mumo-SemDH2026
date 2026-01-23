@@ -13,6 +13,8 @@ Using these filters, users can construct queries that follow an artwork througho
 
 A key practical benefit of the Linked Data Event Streams (LDES) publication model is that **data filtering occurs before retrieval**. Rather than fetching all historical measurements and filtering client-side, the dashboard retrieves only the relevant fragments based on semantic relations and temporal constraints. For instance, when analyzing conditions in a specific year, only the corresponding fragments are accessed, avoiding unnecessary data transfer and improving responsiveness.
 
+This is enabled by the fact that the event stream is published as a semantically linked fragment tree. For a given query, the dashboard can follow only those fragment relations that match the selected group, sensor, and time window, and prune all other subtrees. This makes selective data access a navigation problem rather than a centralized query problem, which fits cross-institutional settings where providers should not have to expose custom query endpoints.
+
 This incremental and selective access is essential for long-running monitoring installations, where datasets grow continuously and may span multiple years.
 
 
@@ -22,7 +24,7 @@ A second, critical scenario concerns the monitoring of artworks during loans bet
 
 In MuMo, this scenario is supported through **group-based access control aligned with Solid identities**. For a loan, the borrowing museum creates a dedicated group in the legacy dashboard and associates the relevant sensors with that group. Access to this group is then granted to specific Web-based identifiers belonging to the lending institution.
 
-Because access control is enforced at the level of published data fragments, external users can authenticate using their own WebIDs and access only the data streams corresponding to the loan group. No centralized user management or data replication is required. Once the loan period ends, access can be revoked by removing the external WebIDs from the group.
+Because access control is enforced at the level of published data fragments, external users can authenticate using their own WebIDs and access only the data streams corresponding to the loan group. No centralized user management or data replication is required. Once the loan period ends, sensors should be taken out of the group, so new data is not shared.
 
 This approach enables temporary, fine-grained sharing of monitoring data across institutional boundaries while remaining manageable for museum staff and compatible with existing workflows.
 

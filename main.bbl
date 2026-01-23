@@ -1,9 +1,21 @@
-\begin{thebibliography}{22}
+\begin{thebibliography}{25}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[CID(2024)]{CIDOC2024}
+Loan-related data entry survey -- final results (13 january 2024), January
+  2024.
+\newblock URL
+  \url{https://cidoc.mini.icom.museum/working-groups/documentation-standards/loan-related-data-entry-survey-2024-01-13/}.
+
+\bibitem[Mon(2025)]{Monitoring2025}
+Environmental monitoring, December 2025.
+\newblock URL
+  \url{https://www.conservation-wiki.com/wiki/Environmental_Monitoring}.
+\newblock MediaWiki page. Last edited 30 December 2025.
 
 \bibitem[Buyle et~al.(2016)Buyle, De~Vocht, Van~Compernolle, De~Paepe,
   Verborgh, Vanlishout, De~Vidts, Mechant, and Mannens]{oslo2016}
@@ -85,7 +97,16 @@ Vincent~C Hu, David Ferraiolo, Rick Kuhn, Adam Schnitzer, Kenneth Sandlin,
 \newblock Ids reference architecture model - {IDS-RAM} 4.0.
 \newblock Technical report, International Data Spaces Association, feb 2023.
 \newblock URL \url{https://docs.internationaldataspaces.org}.
-\newblock Accessed: [Insert Date Here].
+\newblock Accessed: 2026-01-20.
+
+\bibitem[Laborda et~al.(2022)Laborda, Garc{\'\i}a-Castillo, Mercado,
+  Peiro-Vitoria, and Perles]{laborda2022concept}
+Jaime Laborda, Ana~Mar{\'\i}a Garc{\'\i}a-Castillo, Ricardo Mercado, Andrea
+  Peiro-Vitoria, and Angel Perles.
+\newblock From concept to validation of a wireless environmental sensor for the
+  integral application of preventive conservation methodologies in low-budget
+  museums.
+\newblock \emph{Heritage Science}, 10\penalty0 (1):\penalty0 1--17, 2022.
 
 \bibitem[Lancker et~al.(2025)Lancker, Logghe, Rojas, Craene, Vanlishout, and
   Colpaert]{VSDS2025}

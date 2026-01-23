@@ -1,3 +1,5 @@
+This section presents the architecture of MuMo and explains the main design choices behind its approach to cross-institutional environmental monitoring. Rather than replacing existing museum monitoring infrastructures, MuMo adds a semantic publication and governance layer that enables decentralized data access and controlled sharing across institutions. We first outline the overall system composition and data flow, and then describe the key building blocks—semantic modeling, Linked Data Event Streams for continuous publication, and Solid-based governance—showing how they work together to support both longitudinal analysis and collaboration scenarios such as object loans.
+
 ## Dataspace Architecture Based on Solid
 
 MuMo adopts a **dataspace-oriented architecture** based on Solid, a decentralized data platform designed to give data owners control over their data rather than centralizing it within applications [@solid_24; @solid_25; @solidprotocol2022]. Solid is explicitly designed as a decentralization framework in which data storage, identity, and access control are decoupled from individual applications, enabling data to be reused by multiple clients and actors without funneling all data through a centralized service.
@@ -22,6 +24,13 @@ LDES enables consumers to:
 * retrieve historical data incrementally,
 * stay synchronized with newly produced observations,
 * avoid repeated querying of centralized services.
+
+
+An LDES is typically published as a hierarchy of fragments: a tree in which each fragment links to related fragments through semantic relations. These relations allow consumers to navigate to relevant subtrees without scanning the full stream. Choosing how events are grouped into such a fragment tree is known as the fragmentation strategy.
+
+In MuMo, observations are fragmented along the operational dimensions that curators and technicians naturally work with: group, sensor, and time. Concretely, we publish observations under a hierarchical path of the form group-x/sensor-x/year/month/day. This strategy keeps fragments small and stable over time, while preserving a semantic navigation structure.
+
+Because fragment-to-fragment links are expressed as semantic relations, the client can prune irrelevant subtrees early for a given query (e.g., only follow fragments for sensor X within the selected time window), thereby minimizing bandwidth and improving responsiveness.
 
 This publication model proved particularly suitable in a cross-institutional setting, as it allows data consumers to process only the subsets of data they are authorized to access, without requiring the data provider to offer tailored query endpoints [@vanlancker2021ldes].
 
@@ -53,6 +62,10 @@ Prior work on access control has repeatedly highlighted that fine-grained author
 Group-level access was therefore found to be both sufficient and manageable, avoiding complexity that would hinder adoption.
 
 Authorization policies defined in the legacy system are reflected in access constraints on published data, allowing cross-institutional sharing without introducing a new access management interface.
+
+The fragmentation strategy used for the LDES publication directly supports this governance model. Since fragments are organized as group-x/sensor-x/year/month/day, Solid’s access control mechanisms (e.g., WAC) can be applied at different levels of the fragment tree. In the deployed system, authentication impacts the first level of the hierarchy: users gain access to the subtree corresponding to a group, which implicitly grants access to all sensors and time slices contained within that group.
+
+At the same time, this structure makes it explicit that finer-grained authorization is technically possible if required by future workflows: access could be restricted at sensor level (by granting only the corresponding sensor subtree) or at temporal level (by granting only fragments for a selected time range). MuMo intentionally does not activate these options to remain aligned with what museum staff can practically configure in the authoritative legacy dashboard.
 
 Although the underlying fragmentation strategy and event-based publication model would technically allow finer-grained access control (e.g., at the level of individual days or measurement types), MuMo intentionally limits authorization to group-level permissions in order to remain aligned with the configuration mechanisms and functional requirements of the legacy dashboard.
 
