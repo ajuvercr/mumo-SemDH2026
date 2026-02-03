@@ -75,3 +75,51 @@ Although the underlying fragmentation strategy and event-based publication model
 Because each MuMo deployment publishes its data independently, consumers may need to combine data from multiple sources. MuMo supports this through a client-side dashboard that retrieves sensor descriptions first, determines the user’s authorized scope, and then incrementally consumes the relevant observation streams.
 
 This approach avoids centralized aggregation while still enabling a unified user experience, reinforcing the dataspace principle that **integration occurs at the point of use**.
+
+
+## Deployment Components and Access-Control Flow
+
+![Figure 1: deployment overview](Components.drawio.svg){#fig:deploy-overview width=80%}
+
+Figure \ref{fig:deploy-overview} shows the four runtime components that together bridge the legacy monitoring dashboard with Solid-based identity and authorization. MuMo deliberately keeps the legacy dashboard as the authoritative interface for non-technical staff, while reflecting its group-based authorization decisions into Solid’s Web Access Control (WAC) layer. This is consistent with the project’s broader constraint that the dashboard cannot be replaced and already provides the operational concepts of users, groups, and recursively defined group hierarchies.
+
+### Component 1 — PHP dashboard (admin & group management)
+
+The PHP dashboard is the operational control plane. Administrators manage:
+
+* Groups and group hierarchies (including recursive nesting),
+* User-to-group assignments, and
+* Cross-institution access by granting group access to WebIDs.
+
+A WebID may originate from the deployment’s *local Solid Identity Provider (IdP)* (Component 4) or from an external provider such as Inrupt. From the dashboard’s perspective, a WebID is simply the stable identifier used to grant or revoke access at group level—matching how museum staff already reason about “who gets access to which loan group”.
+
+### Component 2 — Solid Pod hosting LDES resources (data plane)
+
+The Solid Pod is the enforcement point for data access. It hosts the published resources (including the LDES fragment tree) and applies WAC authorization before serving any protected resource. Conceptually, this is where an incoming request is interpreted in terms of which protected subtree (group/sensor/time path) is being accessed, and whether the requester’s authenticated WebID is allowed to access it.
+
+### Component 3 — ACL generator (policy materialization service)
+
+The ACL generator is the bridge between the dashboard’s group model and Solid’s resource-level authorization. It receives (synchronized) configuration derived from Component 1:
+
+* For each configured *WebID*: the *groups* it belongs to;
+* For each group: its *position in the group hierarchy* (to support inherited/recursive membership).
+
+From this input, the ACL generator *materializes WAC ACL documents on demand*. Operationally, its central function is:
+
+> given a request targeting a particular group (e.g., “group 4”), return the effective ACL representation for that group.
+
+Rather than requiring administrators to maintain ACL files manually (which would be error-prone and mismatched with existing workflows), the generator ensures the Solid-side authorization view remains a faithful projection of the dashboard configuration.
+
+### Component 4 — Solid Identity Provider (IdP)
+
+The Solid IdP provides authentication for WebIDs under the local deployment’s authority. However, MuMo does *not* require a single centralized identity authority: when a user presents a WebID from a different IdP, authentication can be performed against that remote IdP as well (subject to standard Solid/OIDC behavior). This keeps identity decentralized while still allowing the dashboard to manage access using WebIDs as portable identifiers.
+
+## End-to-end request flow
+
+1. **Admin configuration (control path):** An administrator updates group membership in the PHP dashboard by associating WebIDs with groups and maintaining the relevant group hierarchy.
+2. **Sync to policy service:** These settings are synchronized to the ACL generator as (WebID → groups) plus the group hierarchy.
+3. **User data request (data path):** A client requests an LDES resource from the Solid Pod.
+4. **ACL resolution:** Before serving the resource, the Solid Pod determines which ACL scope applies (effectively: which group subtree is being accessed?) and consults the ACL generator to obtain the effective ACL document for that scope.
+5. **Authentication + authorization:** The Solid Pod validates the requester’s identity via the appropriate IdP (local or remote) and evaluates whether the authenticated WebID is granted access by the generated ACL.
+6. **Response:** If authorized, the Solid Pod serves the requested LDES resource; otherwise it denies access.
+

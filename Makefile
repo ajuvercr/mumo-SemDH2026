@@ -19,11 +19,11 @@ pandoc:
 		--template=template.tex \
   		--natbib \
 		-o main.tex
-	latexmk -pdf -interaction=nonstopmode -bibtex main.tex
+	latexmk -pdf -shell-escape -interaction=nonstopmode -bibtex main.tex
 
 # Build a PDF into OUTDIR (keeps your project root clean)
 $(OUTDIR)/%.pdf: %.tex | $(OUTDIR)
-	$(LATEXMK) -$(ENGINE) -interaction=nonstopmode -halt-on-error \
+	$(LATEXMK) -$(ENGINE) -shell-escape -interaction=nonstopmode -halt-on-error \
 		-outdir=$(OUTDIR) $<
 
 clean:
