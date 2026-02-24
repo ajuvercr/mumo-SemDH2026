@@ -1,11 +1,16 @@
 ---
-title: "Museum Monitoring"
+title: "Museum Monitoring: an environmental monitoring dataspace using The Things Network, Solid, and LDES"
 abstract: |
-    Museums increasingly deploy environmental monitoring systems (e.g., data loggers and sensor networks) to support preventive conservation of cultural heritage objects. However, monitoring data is often captured and accessed through proprietary vendor software and local infrastructures, which makes reuse, integration, and controlled cross-institution sharing difficult —particularly in object loan scenarios.
-    This paper reports on MuMo (Museum Monitoring), a three-year applied research project that explored how dataspace principles can be applied to environmental monitoring in real museum settings. Rather than replacing existing systems, MuMo integrates semantic data modeling, Linked Data Event Streams, and Solid-based data governance with a legacy monitoring dashboard. By combining semantically linked stream fragments with Solid access control, clients can prune irrelevant branches while providers can restrict access at natural boundaries (e.g., per group or sensor), enabling decentralized data publication, selective cross-institutional access, and client-side aggregation across independent deployments.
-    We present the system design and describe how it is used in practice through a set of in-use scenarios, including longitudinal analysis of environmental conditions, controlled data sharing during loans, and multi-source data integration.
-    The paper further reflects on design trade-offs, particularly the choice of group-based access control aligned with existing tools, despite the technical feasibility of finer-grained authorization.
-    The contribution of this work lies in the lessons learned from deploying a dataspace-oriented architecture under real institutional constraints. These insights are relevant to a broad range of Digital Humanities projects involving long-running data collection, distributed governance, and interoperable yet non-centralized infrastructures.
+    Museums increasingly deploy environmental monitoring systems (e.g., data loggers and sensor networks) to support preservation of cultural heritage objects.
+    However, monitoring data is often captured and accessed through proprietary vendor software and local infrastructures, which makes reuse, integration, and controlled cross-institution sharing difficult—particularly in object loan scenarios.
+    This paper reports on MuMo (Museum Monitoring), a three-year applied research project that explored how dataspace principles can be applied to environmental monitoring in real museum settings.
+    Rather than replacing existing systems, MuMo extends a legacy monitoring dashboard with semantic data modeling, Linked Data Event Streams, and Solid-compliant data access management.
+    We present the system design: environmental monitoring data is semantically described and published as access controlled streams of fragments, and the semantic links between these streams allow clients to prune irrelevant branches while providers can restrict access at natural boundaries (e.g., per group or sensor).
+    Further, we describe how MuMo is used in practice through a set of in-use scenarios,
+    where the system enables (1) decentralized data publication for longitudinal analysis of environmental conditions, (2) selective cross-institutional data sharing during object loans, and (3) client-side data integration and aggregation across independent deployments.
+    By deploying this dataspace-oriented architecture under real institutional constraints,
+    we unveiled practical design trade-offs, particularly the choice of group-based access control aligned with existing tools, despite the technical feasibility of finer-grained authorization.
+    The deployed system and its insights are thus relevant to a broad range of (Digital Humanities) projects that involve long-running data integration under distributed governance.
 keywords:
     - Digital Humanities
     - Dataspaces
@@ -26,7 +31,7 @@ authors:
     email: "ben.demeester@ugent.be"
     fnmark: 1
 
-  - name: "Julian "
+  - name: "Julian Rojas"
     affils: [1]
     orcid: "0000-0002-9421-8566"
     email: "JulianAndres.RojasMelendez@UGent.be"
@@ -57,6 +62,12 @@ fntext:
   - id: 1
     text: "These authors contributed equally."
 ---
+
+<!-- BDM: comment on the abstract:
+the conclusions are currently an combination of quite vague and very specific detail:
+> we unveiled practical design trade-offs, particularly the choice of group-based access control aligned with existing tools, despite the technical feasibility of finer-grained authorization.
+I would prefer to have more concrete conclusions without getting into technical details
+-->
 
 # Introduction & Motivation
 
