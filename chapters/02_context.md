@@ -1,11 +1,31 @@
 
-The MuMo (Museum Monitoring) project was a three-year applied research project aimed at supporting museums in the long-term monitoring of environmental conditions around collection objects. Many museums—especially smaller institutions—lack continuous insight into parameters such as temperature, humidity, or light exposure, despite these being critical for conservation and often contractually relevant during object loans.
+The Museum Monitoring project (MuMo, 2022--2025)
+aimed to support museums in the long-term monitoring of environmental conditions around collection objects
+through open hardware and software.
+<!-- TODO: include descriptions of the relevant companies involved, what the stakeholders were, etc. -->
+Sensors were placed near artworks or storage locations and continuously measured environmental parameters.
+Measurements could be inspected through a dashboard application.
+
+<!-- BDM: ❗ I think structure-wise this section feels weird: you didn't state you were going to discuss the history of the project, but then you suddenly do.
+First, clearly state the intention of this MuMo project: extend a proof-of-concept to support cross-institution data sharing (so your current section 2.3 and 2.4).
+Then, you can start adding.
+Second, describe the architecture of the proof-of-concept (current 2.1 and 2.2).
+Third, identify the gaps to reach your goal: semantic model, event stream publishing, access control.
+Then you have a basis for section 3: "these are the components we introduced to fix gaps A and B, needed to fulfill requirements 1 and 2 and 3" -->
+
+<!-- Many museums—especially smaller institutions—lack continuous insight into parameters such as temperature, humidity, or light exposure, despite these being critical for conservation and often contractually relevant during object loans. -->
+<!-- BDM: you said above in the introduction, why repeat yourself? -->
+<!-- BDM: also, do you have proof for the 'especially smaller institutions' comment? -->
 
 ## Operational Setting
 
-MuMo was deployed in real museum environments and focused on low-maintenance, long-running installations. Custom ultra-low-power sensing hardware was developed to operate for approximately one year without recharging. Sensors were placed near artworks or storage locations and continuously measured environmental parameters. Due to the physical and organizational constraints of museum spaces, the system had to function with minimal intervention once deployed.
+MuMo was deployed in real museum environments and focused on long-running, low-maintenance installations. Custom low-power sensing hardware was developed to operate for approximately one year without recharging.
+<!-- BDM: ULTRA! If you can't prove an adjective, don't use it. -->
+<!-- Due to the physical and organizational constraints of museum spaces, the system had to function with minimal intervention once deployed. -->
+<!-- BDM: redundant compared to first sentence, no? -->
 
 Measurements were transmitted via The Things Network and ingested into an existing (legacy) monitoring dashboard. This dashboard became the primary operational interface for museum staff and therefore strongly shaped how data could be accessed, interpreted, and shared.
+<!-- BDM: I think you need to discuss loraWAN, as that allows you to give a hook into the Things Network. -->
 
 ## Legacy Dashboard Constraints
 
@@ -15,7 +35,15 @@ The existing dashboard provided:
 * Node management corresponding to deployed sensors
 * Basic visualization through simple time-series graphs
 
-Access control was **group-based and coarse-grained**, sufficient for internal monitoring within a single institution but not designed for cross-institutional collaboration. Importantly, the dashboard could not be replaced or fundamentally re-engineered within the scope of the project, requiring MuMo to operate within these constraints.
+Access control was **group-based and coarse-grained**,
+<!-- BDM: I'm not sure what you mean by coarse-grained, and at this point it's not clear why that's important -->
+sufficient for internal monitoring within a single institution but not designed for cross-institutional collaboration. Importantly, the dashboard could not be replaced or fundamentally re-engineered within the scope of the project, requiring MuMo to operate within these constraints.
+<!-- BDM: BOOOOO that's not a good reason. You can perfectly turn that around as an advantage instead of a constraint:
+
+> Given the user group's familiarity with the original dashboard during the proof-of-concept phase,
+we decided to reuse its UI where possible. -->
+
+<!-- BDM: I'm gonna stop reviewing this section as I think you need to rework this, cfr my comment with the ❗ above -->
 
 ## Cross-Institutional Access and Loans
 

@@ -175,24 +175,20 @@ After describing the X in Section Y, we {[}\ldots{]}
 \hypertarget{context-of-use}{%
 \section{Context of Use}\label{context-of-use}}
 
-The MuMo (Museum Monitoring) project was a three-year applied research
-project aimed at supporting museums in the long-term monitoring of
-environmental conditions around collection objects. Many
-museums---especially smaller institutions---lack continuous insight into
-parameters such as temperature, humidity, or light exposure, despite
-these being critical for conservation and often contractually relevant
-during object loans.
+The Museum Monitoring project (MuMo, 2022--2025) aimed to support
+museums in the long-term monitoring of environmental conditions around
+collection objects through open hardware and software. Sensors were
+placed near artworks or storage locations and continuously measured
+environmental parameters. Measurements could be inspected through a
+dashboard application.
 
 \hypertarget{operational-setting}{%
 \subsection{Operational Setting}\label{operational-setting}}
 
 MuMo was deployed in real museum environments and focused on
-low-maintenance, long-running installations. Custom ultra-low-power
-sensing hardware was developed to operate for approximately one year
-without recharging. Sensors were placed near artworks or storage
-locations and continuously measured environmental parameters. Due to the
-physical and organizational constraints of museum spaces, the system had
-to function with minimal intervention once deployed.
+long-running, low-maintenance installations. Custom low-power sensing
+hardware was developed to operate for approximately one year without
+recharging.
 
 Measurements were transmitted via The Things Network and ingested into
 an existing (legacy) monitoring dashboard. This dashboard became the
@@ -291,30 +287,23 @@ analysis and collaboration scenarios such as object loans.
 \subsection{Dataspace Architecture Based on
 Solid}\label{dataspace-architecture-based-on-solid}}
 
-MuMo adopts a \textbf{dataspace-oriented architecture} based on Solid, a
-decentralized data platform designed to give data owners control over
-their data rather than centralizing it within applications
-\citep{solid_24, solid_25, solidprotocol2022}. Solid is explicitly
-designed as a decentralization framework in which data storage,
-identity, and access control are decoupled from individual applications,
-enabling data to be reused by multiple clients and actors without
-funneling all data through a centralized service.
+MuMo adopts a \textbf{dataspace-oriented architecture} based on Solid: a
+decentralization framework in which data storage {[}+++ solid
+protocol{]}, identity {[}+++ solid-oidc{]}, and access control
+\citep{wac} are decoupled from individual applications, enabling data to
+be reused by multiple clients and actors without funneling all data
+through a centralized service
+\citep{solidprotocol2022, solid_24, solid_25}. This approach aligns with
+museum practice: institutions are unwilling to relinquish control over
+their monitoring infrastructure, yet must be able to selectively share
+data during collaborations such as object loans.
 
-This approach aligns with museum practice: institutions are unwilling to
-relinquish control over their monitoring infrastructure, yet must be
-able to selectively share data during collaborations such as object
-loans. Solid provides a conceptual and technical framework in which
-identity, authorization \citep{wac}, and data location are decoupled
-from any single application, explicitly aiming to counter the
-concentration of data within centralized platforms by restoring data
-ownership to the producing parties.
-
-While some recent research emphasizes cryptographic immutability and
-tamper resistance through tightly coupled sensor infrastructures,
-hardware-based attestation, and private distributed ledgers, MuMo
-instead prioritizes institutional autonomy and operational feasibility
-by enabling decentralized data publication and access control aligned
-with existing museum workflows \citep{ross2024digital}.
+Some recent research emphasizes cryptographic immutability and tamper
+resistance, by coupling sensor infrastructures with hardware-based
+attestation and private distributed ledgers \citep{ross2024digital}.
+Within MuMo, we prioritized institutional autonomy and operational
+feasibility by enabling decentralized data publication and access
+control aligned with existing museum workflows.
 
 In MuMo, Solid Pods act as \textbf{institutional data endpoints} rather
 than user-centric storage, enabling long-lived publication of monitoring
@@ -324,51 +313,33 @@ data that remains independently governed.
 \subsection{Continuous Data Publication with Linked Data Event
 Streams}\label{continuous-data-publication-with-linked-data-event-streams}}
 
-Environmental monitoring produces \textbf{continuous, append-only data}
-that grows over time and is rarely modified retroactively. To reflect
-this, MuMo publishes monitoring data using \textbf{Linked Data Event
-Streams (LDES)} \citep{vanlancker2021ldes, semic_support_centre}.
+Environmental monitoring produces sensor data: \textbf{continuous,
+append-only data} that grows over time and is rarely modified
+retroactively. To reflect this, MuMo publishes monitoring data using
+\textbf{Linked Data Event Streams (LDES)}
+\citep{semic_support_centre, vanlancker2021ldes}.
 
-LDES is increasingly adopted as a practical pattern for interoperable
+LDES is a pattern that is increasingly adopted for interoperable
 publication of evolving datasets, enabling replication and
 synchronization across organizational boundaries without centralized
 query services \citep{semic_support_centre}.
 
-Prior work has demonstrated the feasibility of storing and consuming
-LDES event sources within the Solid ecosystem, supporting the
-compatibility of event-stream publication with Solid-based access
-control \citep{slabbinck2023linked}.
+An LDES is typically published as a tree-based hierarchy of fragments:
+each fragment links to related fragments through semantic relations.
+These relations allow consumers to navigate to relevant subtrees without
+requiring them to scan the full stream. This publication pattern enables
+consumers to (1) retrieve historical data incrementally, (2) stay
+synchronized with newly produced observations, and (3) avoid repeated
+querying of centralized services.
 
-LDES enables consumers to:
-
-\begin{itemize}
-\tightlist
-\item
-  retrieve historical data incrementally,
-\item
-  stay synchronized with newly produced observations,
-\item
-  avoid repeated querying of centralized services.
-\end{itemize}
-
-An LDES is typically published as a hierarchy of fragments: a tree in
-which each fragment links to related fragments through semantic
-relations. These relations allow consumers to navigate to relevant
-subtrees without scanning the full stream. Choosing how events are
-grouped into such a fragment tree is known as the fragmentation
-strategy.
-
-In MuMo, observations are fragmented along the operational dimensions
-that curators and technicians naturally work with: group, sensor, and
-time. Concretely, we publish observations under a hierarchical path of
-the form group-x/sensor-x/year/month/day. This strategy keeps fragments
-small and stable over time, while preserving a semantic navigation
-structure.
-
-Because fragment-to-fragment links are expressed as semantic relations,
-the client can prune irrelevant subtrees early for a given query (e.g.,
-only follow fragments for sensor X within the selected time window),
-thereby minimizing bandwidth and improving responsiveness.
+Choosing how events are grouped into such a fragment tree is known as
+the fragmentation strategy. In MuMo, observations are fragmented along
+the operational dimensions that curators and technicians naturally work
+with: group, sensor, and time. Concretely, we publish observations under
+a hierarchical path of the form group-x/sensor-x/year/month/day. This
+strategy keeps fragments small and stable over time, while preserving a
+semantic navigation structure (e.g., only follow fragments for sensor X
+within the selected time window).
 
 This publication model proved particularly suitable in a
 cross-institutional setting, as it allows data consumers to process only
@@ -376,14 +347,20 @@ the subsets of data they are authorized to access, without requiring the
 data provider to offer tailored query endpoints
 \citep{vanlancker2021ldes}.
 
+Prior work has demonstrated the feasibility of storing and consuming
+LDES event sources within the Solid ecosystem, supporting the
+compatibility of event-stream publication with Solid-based access
+control \citep{slabbinck2023linked}.
+
 \hypertarget{semantic-representation-of-sensors-and-observations}{%
 \subsection{Semantic Representation of Sensors and
 Observations}\label{semantic-representation-of-sensors-and-observations}}
 
 All data managed by the legacy dashboard is transformed into a semantic
-representation, including both \textbf{environmental observations} and
-\textbf{sensor configuration metadata}. This separation reflects two
-different kinds of change:
+representation, including both \textbf{environmental observations}
+(e.g., temperature, humidity, and light exposure) and \textbf{sensor
+configuration metadata} (i.e., group membership, location, and
+{[}+++{]}). This separation reflects two different kinds of change:
 
 \begin{itemize}
 \tightlist
@@ -410,12 +387,12 @@ In MuMo, these concepts are instantiated using OSLO vocabularies
 profiles and reuses international semantic standards for
 cross-organizational data exchange.
 
-Sensor metadata is therefore published as a \textbf{versioned event
-stream}, allowing consumers to reconstruct the context in which
+Sensor configuraton metadata is published as a \textbf{versioned event
+stream}, this allows consumers to reconstruct the context in which
 observations were produced. Group membership and location are encoded
-explicitly in the semantic descriptions, enabling downstream systems to
-reason about authorization and interpretation without consulting the
-legacy dashboard.
+explicitly in the sensor configuration metadata, which enables
+downstream systems to independently interpret authorization rules
+correctly.
 
 \hypertarget{group-based-access-control-as-a-practical-design-choice}{%
 \subsection{Group-Based Access Control as a Practical Design
