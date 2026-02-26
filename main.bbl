@@ -1,4 +1,4 @@
-\begin{thebibliography}{25}
+\begin{thebibliography}{23}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -60,19 +60,6 @@ Katrina~Simone Fenlon.
   community-centred strategies.
 \newblock \emph{International Journal of Digital Curation}, 15\penalty0
   (1):\penalty0 13--13, 2020.
-
-\bibitem[Franklin et~al.(2005)Franklin, Halevy, and
-  Maier]{franklin2005databases}
-Michael Franklin, Alon Halevy, and David Maier.
-\newblock From databases to dataspaces: a new abstraction for information
-  management.
-\newblock \emph{ACM Sigmod Record}, 34\penalty0 (4):\penalty0 27--33, 2005.
-
-\bibitem[Halevy et~al.(2006)Halevy, Franklin, and Maier]{halevy2006principles}
-Alon Halevy, Michael Franklin, and David Maier.
-\newblock Principles of dataspace systems.
-\newblock In \emph{Proceedings of the twenty-fifth ACM SIGMOD-SIGACT-SIGART
-  symposium on Principles of database systems}, pages 1--9, 2006.
 
 \bibitem[Haller et~al.(2017)Haller, Janowicz, Cox, Lefrançois, Taylor,
   Le~Phuoc, Lieberman, García-Castro, and Stadler]{ssn-sosa}

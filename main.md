@@ -8,8 +8,7 @@ abstract: |
     We present the system design: environmental monitoring data is semantically described and published as access controlled streams of fragments, and the semantic links between these streams allow clients to prune irrelevant branches while providers can restrict access at natural boundaries (e.g., per group or sensor).
     Further, we describe how MuMo is used in practice through a set of in-use scenarios,
     where the system enables (1) decentralized data publication for longitudinal analysis of environmental conditions, (2) selective cross-institutional data sharing during object loans, and (3) client-side data integration and aggregation across independent deployments.
-    By deploying this dataspace-oriented architecture under real institutional constraints,
-    we unveiled practical design trade-offs, particularly the choice of group-based access control aligned with existing tools, despite the technical feasibility of finer-grained authorization.
+    In practice, this dataspace-oriented deployment reveals design trade-offs while preserving institutional autonomy: museums control their data and authorization policies end-to-end (sufficiently with group-based access control), supporting trusted data sharing across organizational boundaries.
     The deployed system and its insights are thus relevant to a broad range of (Digital Humanities) projects that involve long-running data integration under distributed governance.
 keywords:
     - Digital Humanities
@@ -62,12 +61,6 @@ fntext:
   - id: 1
     text: "These authors contributed equally."
 ---
-
-<!-- BDM: comment on the abstract:
-the conclusions are currently an combination of quite vague and very specific detail:
-> we unveiled practical design trade-offs, particularly the choice of group-based access control aligned with existing tools, despite the technical feasibility of finer-grained authorization.
-I would prefer to have more concrete conclusions without getting into technical details
--->
 
 # Introduction & Motivation
 

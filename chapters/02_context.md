@@ -1,10 +1,7 @@
+The Museum Monitoring (MuMo) project was a three-year cultural heritage project\footnote{https://www.vlaanderen.be/cjm/nl/cultuur/cultureel-erfgoed/subsidies-cultureel-erfgoed/projectsubsidies-cultureel-erfgoed/internationale-landelijke-en-bovenlokale-cultureel-erfgoedprojecten}, funded by the Flemish Government from 2022 to 2025.
+Its applied research objective was to develop both open‑hardware monitoring devices and a dedicated data space to support museums in the long‑term tracking of environmental conditions surrounding collection objects.
 
-The Museum Monitoring project (MuMo, 2022--2025)
-aimed to support museums in the long-term monitoring of environmental conditions around collection objects
-through open hardware and software.
 <!-- TODO: include descriptions of the relevant companies involved, what the stakeholders were, etc. -->
-Sensors were placed near artworks or storage locations and continuously measured environmental parameters.
-Measurements could be inspected through a dashboard application.
 
 <!-- BDM: ❗ I think structure-wise this section feels weird: you didn't state you were going to discuss the history of the project, but then you suddenly do.
 First, clearly state the intention of this MuMo project: extend a proof-of-concept to support cross-institution data sharing (so your current section 2.3 and 2.4).
@@ -15,17 +12,16 @@ Then you have a basis for section 3: "these are the components we introduced to 
 
 <!-- Many museums—especially smaller institutions—lack continuous insight into parameters such as temperature, humidity, or light exposure, despite these being critical for conservation and often contractually relevant during object loans. -->
 <!-- BDM: you said above in the introduction, why repeat yourself? -->
-<!-- BDM: also, do you have proof for the 'especially smaller institutions' comment? -->
 
 ## Operational Setting
 
-MuMo was deployed in real museum environments and focused on long-running, low-maintenance installations. Custom low-power sensing hardware was developed to operate for approximately one year without recharging.
-<!-- BDM: ULTRA! If you can't prove an adjective, don't use it. -->
-<!-- Due to the physical and organizational constraints of museum spaces, the system had to function with minimal intervention once deployed. -->
-<!-- BDM: redundant compared to first sentence, no? -->
+MuMo has been deployed in real museum environments and the sensors were placed near artworks or storage locations and continuously measured environmental parameters.
+Due to the physical and organizational constraints of museum spaces, the system had to function with minimal intervention once deployed. 
+To accommodate this requirement, custom ultra-low-power sensing hardware was developed, designed  to operate for approximately one year without recharging.
 
-Measurements were transmitted via The Things Network and ingested into an existing (legacy) monitoring dashboard. This dashboard became the primary operational interface for museum staff and therefore strongly shaped how data could be accessed, interpreted, and shared.
-<!-- BDM: I think you need to discuss loraWAN, as that allows you to give a hook into the Things Network. -->
+Measurements captured by the MuMo monitoring devices were transmitted via a LoRaWAN signal to off‑the‑shelf gateways and routed through The Things Network, where they were then ingested into an existing (legacy) monitoring dashboard\footnote{https://www.thethingsnetwork.org/docs/lorawan/architecture/}.
+This dashboard became the primary operational interface for museum staff and therefore strongly shaped how data could be accessed, interpreted, and shared. 
+
 
 ## Legacy Dashboard Constraints
 
@@ -34,6 +30,8 @@ The existing dashboard provided:
 * User and group management, including recursively defined groups
 * Node management corresponding to deployed sensors
 * Basic visualization through simple time-series graphs
+* Configure alerts and notification when measured values cross a certain threshold.
+* Export data ranges to CSV
 
 Access control was **group-based and coarse-grained**,
 <!-- BDM: I'm not sure what you mean by coarse-grained, and at this point it's not clear why that's important -->

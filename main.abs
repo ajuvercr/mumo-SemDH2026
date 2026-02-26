@@ -18,11 +18,11 @@ used in practice through a set of in-use scenarios, where the system
 enables (1) decentralized data publication for longitudinal analysis of
 environmental conditions, (2) selective cross-institutional data sharing
 during object loans, and (3) client-side data integration and
-aggregation across independent deployments. By deploying this
-dataspace-oriented architecture under real institutional constraints, we
-unveiled practical design trade-offs, particularly the choice of
-group-based access control aligned with existing tools, despite the
-technical feasibility of finer-grained authorization. The deployed
-system and its insights are thus relevant to a broad range of (Digital
-Humanities) projects that involve long-running data integration under
-distributed governance.
+aggregation across independent deployments. In practice, this
+dataspace-oriented deployment reveals design trade-offs while preserving
+institutional autonomy: museums control their data and authorization
+policies end-to-end (sufficiently with group-based access control),
+supporting trusted data sharing across organizational boundaries. The
+deployed system and its insights are thus relevant to a broad range of
+(Digital Humanities) projects that involve long-running data integration
+under distributed governance.
