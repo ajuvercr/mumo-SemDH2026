@@ -1,13 +1,12 @@
-# Context of Use
+# Background and Design Constraints
 
-This work continues on an old project we call MuMo v1.
-In this section, we call the current project MuMo v2, but all other mentions of MuMo in the paper refer to MuMo v2.
+To avoid ambiguity, we use MuMo v1 for the earlier prototype and MuMo v2 for the work presented in this paper. Unless stated otherwise, “MuMo” refers to MuMo v2.
 
-MuMo v1 started from disbelieve that Museum Monitoring was that closed of and that opaque. So the people from the Fashion Museum went to work to get insight in how difficult it would be to measure the environment and analyse this data in a dashboard.
-This monitoring setup centered on a Raspberry Pi connected to a PhP dashboard. 
-Impressed by the achievable potential and impact, the Fashion Museum applied for funding to further improvements.
+MuMo v1 originated from the observation that environmental monitoring data in museums is difficult to access and reuse outside vendor dashboards. To assess what could be achieved with modest resources, the Fashion Museum Antwerp built an initial prototype to collect measurements and visualize them in a lightweight dashboard.
+This monitoring setup centered on a Raspberry Pi connected to a PHP dashboard. 
+Based on the prototype’s demonstrated potential, the museum applied for funding to extend the work.
 
-## Starting point: MuMo v1 (Raspberry Pi + dashboard)
+## Starting point: MuMo v1
 
 MuMo v2 starts from MuMo v1, which already supported core operational monitoring: ingestion and persistence of sensor readings, time-series visualization, alerting, and basic export functionality. MuMo v1’s dashboard also supported user and group management aligned with museum workflows, enabling staff to manage access within an institution in terms of responsibilities and spaces.
 
@@ -26,3 +25,4 @@ Building on this baseline, MuMo v2 advances both hardware and software while kee
 ## Summary: context as a design constraint
 
 In MuMo v2, the central context is the combination of (1) long-running, append-only monitoring data, (2) operational tooling that cannot be replaced, and (3) collaboration scenarios that require selective, revocable access across organizational boundaries. MuMo v2 is therefore shaped by a pragmatic objective: introduce interoperability and governance-aware sharing while preserving institutional autonomy and established workflows.
+
