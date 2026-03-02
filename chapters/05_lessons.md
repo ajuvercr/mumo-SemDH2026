@@ -14,7 +14,7 @@ This was particularly evident in the loan scenario (Scenario 2), where Solid ide
 
 The use of Linked Data Event Streams proved essential for handling the continuous and growing nature of monitoring data. In the analysis scenario (Scenario 1), LDES enabled the dashboard to retrieve only the relevant subsets of data based on semantic relations and temporal constraints, avoiding the need to fetch complete datasets and filter client-side.
 
-Lesson learned: The combination of LDES and Solid is particularly effective because fragmentation simultaneously serves performance and governance needs. Fragment trees enable clients to prune irrelevant subtrees for a given query, while Solid access control can be enforced on the same subtree boundaries. This allows selective cross-institutional access without requiring providers to implement bespoke query endpoints or replicate data into centralized stores.
+**Lesson learned:** The combination of LDES and Solid is particularly effective because fragmentation simultaneously serves performance and governance needs. Fragment trees enable clients to prune irrelevant subtrees for a given query, while Solid access control can be enforced on the same subtree boundaries. This allows selective cross-institutional access without requiring providers to implement bespoke query endpoints or replicate data into centralized stores.
 
 This incremental access model also facilitated multi-source analysis (Scenario 3), where data from multiple independent MuMo deployments could be consumed and combined without requiring centralized aggregation or bespoke query endpoints.
 

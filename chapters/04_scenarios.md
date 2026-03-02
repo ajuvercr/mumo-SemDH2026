@@ -16,8 +16,7 @@ Using these filters, users can construct queries that follow an artwork througho
 A key practical benefit of the Linked Data Event Streams (LDES) publication model is that **data filtering occurs before retrieval**. Rather than fetching all historical measurements and filtering client-side, the dashboard retrieves only the relevant fragments based on semantic relations and temporal constraints. For instance, when analyzing conditions in a specific year, only the corresponding fragments are accessed, avoiding unnecessary data transfer and improving responsiveness.
 
 This is enabled by the fact that the event stream is published as a semantically linked fragment tree. For a given query, the dashboard can follow only those fragment relations that match the selected group, sensor, and time window, and prune all other subtrees. This makes selective data access a navigation problem rather than a centralized query problem, which fits cross-institutional settings where providers should not have to expose custom query endpoints.
-
-This incremental and selective access is essential for long-running monitoring installations, where datasets grow continuously and may span multiple years.
+This keeps retrieval lightweight even as the overall monitoring history keeps growing.
 
 
 ## Scenario 2: Cross-Institutional Access During Loans
@@ -35,20 +34,16 @@ This approach enables temporary, fine-grained sharing of monitoring data across 
 
 In addition to supporting analysis within a single monitoring deployment, the advanced dashboard demonstrates the ability to **combine data from multiple independent MuMo data sources**. Each MuMo deployment publishes its monitoring data and sensor descriptions independently, yet follows the same semantic representation and event-based publication model.
 
-In practice, this allows users to access and analyze data originating from different museum setups within a single interface. For example, a user may compare environmental conditions across multiple exhibition spaces or institutions, provided they have the appropriate access rights. Because sensor metadata and observations are published as Linked Data Event Streams, the dashboard can discover available sensors, determine authorization, and incrementally retrieve data from multiple sources without requiring centralized aggregation.
+In practice, this allows users to access and analyze data originating from different museum setups within a single interface. For example, a user may compare environmental conditions across multiple exhibition spaces or institutions, provided they have the appropriate access rights. Because sensor metadata and observations are published as LDES, the dashboard can discover available sensors, determine authorization, and incrementally retrieve data from multiple sources without requiring centralized aggregation.
 
 Beyond this demonstrated functionality, the same mechanisms also enable the **conceptual integration of external data sources** that are not part of the MuMo project, such as weather station measurements. Since both sensor metadata and observations are modeled using shared semantic standards, incorporating additional event streams would not require changes to the underlying architecture. While such external integrations have not yet been deployed, they directly informed the design of the system and illustrate how the dataspace approach supports extensibility and reuse.
 
 
-## Generalizing the scenarios beyond monitoring systems
+## Generalizing beyond monitoring systems
 
-While the scenarios above focus on environmental monitoring data, they also reveal a more general pattern regarding the role of contextual information in enabling downstream analysis.
-They rely on contextual information such as temporal validity, object location, and sensor deployment. In MuMo, this information was obtained from the monitoring infrastructure and its associated configuration data. However, the underlying mechanism illustrated by these scenarios does not depend on the specific system from which such context originates.
-In practice, museums already maintain similar forms of structured contextual information in a variety of collection management and repository systems, independent of environmental monitoring.
+The scenarios above emphasize environmental monitoring data, but the broader takeaway is about interoperability between contextual datasets. Today, MuMo can derive rich analyses because it combines observations with time-aware context from the monitoring infrastructure itself (e.g., when a sensor was deployed where, and for which period). However, museums already maintain other structured context—most notably about artworks, locations, and movements—in collection management systems and repositories, such as Omeka-S or digital repository services such as D-RaaS [@draas2023].
 
-Contemporary collection management systems and digital repositories often manage object metadata, temporal associations, and organizational context, and may support structured export mechanisms. Examples include repository platforms such as Omeka-S or digital repository services such as D-RaaS [@draas2023].
+If this object-centric information could be combined with MuMo’s sensor and observation streams in an interoperable way, MuMo would become substantially more powerful. Queries could then be expressed directly in curatorial terms—e.g., “show me a graph of the temperature experienced by this artwork”—because the system could follow links from an object to its associated locations and time windows, and from there build queries to retrieve to the relevant measurements.
 
-When such contextual information is made available in a structured and time-aware form, it becomes possible to derive queries that are not explicitly supported by the originating CMS. Instead, these queries emerge from the combination of temporal relations, location changes, and object associations at the point of use.
-
-MuMo demonstrates this principle in the domain of environmental monitoring, but the same mechanism can be applied more broadly to contextual data maintained by other institutional systems. This suggests that dataspace-oriented approaches can unlock additional analytical value from existing CMS infrastructures without requiring their replacement or redesign.
+At present, the necessary datasets often exist, but they are not interoperable: a curator can typically assemble such answers only by manually aligning exports from the CMS/repository with monitoring data. MuMo’s approach highlights that making these contextual links available in a structured, time-aware form would shift this effort from ad-hoc manual integration to repeatable, queryable reuse at the point of use, without requiring museums to replace their existing collection management infrastructure. 
 

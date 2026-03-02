@@ -1,18 +1,20 @@
 # System and Approach Overview
 
-MuMo supports cross-institutional environmental monitoring without replacing the monitoring infrastructure museums already operate. Instead, it adds a semantic publication and governance layer that enables decentralized access and controlled sharing of monitoring data across institutions. Concretely, MuMo (i) represents monitoring data and its evolving context semantically, (ii) publishes append-only time series as incrementally consumable event streams, and (iii) enforces sharing decisions using Solid-based identity and authorization mechanisms. 
+Chapter 3 explains how MuMo turns those three needs from the introduction into a concrete system: it keeps the familiar day-to-day monitoring workflow intact, while making the resulting data durable enough to interpret years later and scoped enough to share only what a partner should see.
+The core idea is to treat monitoring not as a dashboard export, but as a governed dataset that can be reused across time and across institutions—especially in loan situations where transparency is necessary, but full internal exposure is not.
 
-To keep the architecture readable and avoid repeating the same rationale in multiple places, this chapter is organized as a stack: Data model, Publication layer, Governance layer, and Operationalization (components and end-to-end request flow).
+We begin by introducing the data representation MuMo relies on and the way monitoring observations are captured and published over time. Next, we describe how access and sharing are controlled so that institutions can expose selected views without relinquishing ownership. Finally, we walk through the concrete components and their interaction to show how these ideas come together in the running system.
+
 
 ## Data model and semantic representation
 
-Environmental monitoring data is only useful if it remains interpretable over long periods, including across sensor redeployments and organizational boundaries. MuMo therefore transforms the information already managed in the legacy dashboard into a semantic representation: both environmental observations (e.g., temperature, humidity, light exposure) and sensor configuration metadata (e.g., group membership and location). 
+Environmental monitoring data is only useful if it remains interpretable over long periods, including across sensor redeployments and organizational boundaries. MuMo therefore transforms the information already managed in the legacy dashboard into a semantic representation: both environmental observations (e.g., temperature, humidity, light exposure) and sensor configuration metadata (e.g. group/location). 
 
 ### Modeling sensors and observations
 
 MuMo builds on established models for describing sensors and observations, most notably the W3C Semantic Sensor Network ontology (SSN/SOSA) [@compton2012ssn; @ssn-sosa]. SSN/SOSA is particularly suitable because it separates (i) the sensor, (ii) the observation, and (iii) the feature of interest being observed. This allows MuMo to represent sensor redeployment and contextual change (e.g., a sensor moved to a different space) without rewriting historical observations that were produced under earlier conditions. 
 
-MuMo instantiates these concepts using OSLO vocabularies [@oslo2016], which profile and reuse international semantic standards for cross-organizational data exchange. 
+MuMo instantiates these concepts using the Flemish OSLO (Open Standaarden voor Linkende Organisaties) vocabularies [@oslo2016], maintained under Digitaal Vlaanderen, which profile and reuse international semantic standards to support cross-organizational data exchange.
 
 ### Representing changing context as configuration events
 
@@ -23,23 +25,54 @@ Monitoring data exhibits two different dynamics:
 
 MuMo makes this distinction explicit by publishing configuration metadata as a versioned event stream, allowing consumers to reconstruct which context applied when an observation was produced. 
 
-Group membership and location are encoded explicitly in this configuration stream. This is not merely descriptive metadata: it enables downstream systems to interpret observations correctly and consistently apply sharing rules that are expressed in terms museum staff already use (groups representing rooms, objects, loan packages, etc.). 
+Group membership (or location) are encoded explicitly in this configuration stream as versioned entities. This is not merely descriptive metadata: it enables downstream systems to interpret observations correctly and consistently apply sharing rules that are expressed in terms museum staff already use (groups representing rooms, objects, loan packages, etc.). 
 
 ## Publication layer: Linked Data Event Streams
 
-Museum monitoring datasets are long-running and append-only in practice: measurements accumulate, and retroactive correction is rare. MuMo therefore publishes monitoring data using Linked Data Event Streams (LDES) [@semic_support_centre; @vanlancker2021ldes]. 
+Museum monitoring datasets are long-running and effectively append-only: new measurements keep arriving, growing the stream.
+That “ever-growing log” is exactly what Linked Data Event Streams (LDES) are designed for—publishing data incrementally in fragments that consumers can efficiently synchronise over time. This approach is also actively promoted in Flanders (Digitaal Vlaanderen) for interoperable data sharing.
+MuMo therefore publishes monitoring data using LDES [@semic_support_centre; @vanlancker2021ldes].
 
-### Incremental access to evolving datasets
+LDES supports interoperable publication of evolving datasets in a way that enables replication and synchronization across organizational boundaries without requiring a centralized query service.
 
-LDES supports interoperable publication of evolving datasets in a way that enables replication and synchronization across organizational boundaries without requiring a centralized query service. 
+An LDES publication is typically organized as a fragment tree: events are partitioned into smaller resources (fragments), and each fragment exposes typed links to other fragments through machine-interpretable relations in the Linked Data representation.
+Listing X illustrates this with a first-level partitioning by sensor: the entrypoint fragment links, via `tree:EqualToRelation` on `sosa:madeBySensor`, to a dedicated fragment for each sensor.
+In practice, such partitionings can be composed: once a client has navigated to the fragment for the relevant sensor, that fragment can in turn act as the root of a second tree (e.g., partitioned by time windows such as month/day), enabling clients to narrow down first by source and then by interval without scanning unrelated observations.
 
-An LDES publication is typically organized as a fragment tree: events are partitioned into smaller resources (fragments), and fragments link to related fragments through machine-interpretable relations in the Linked Data representation. Consumers navigate these relations to reach the relevant parts of the dataset without scanning the full stream. 
+```turtle
+@base <https://mumo.faro.be/data/>.
+@prefix tree: <https://w3id.org/tree#> .
+@prefix ldes: <https://w3id.org/ldes#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/>.
+
+# LDES entrypoint
+<stream>
+  a ldes:EventStream ;
+  tree:view <by-sensor> .
+
+# <by-sensor> fragment
+<by-sensor>
+  a tree:Node ;
+  tree:relation [
+    a tree:EqualToRelation ;
+    tree:path sosa:madeBySensor ;
+    tree:value <https://mumo.faro.be/sensors/sensor-1> ;
+    tree:node <by-sensor/sensor-1> ;
+  ] ;
+  tree:relation [
+    a tree:EqualToRelation ;
+    tree:path sosa:madeBySensor;
+    tree:value <https://mumo.faro.be/sensors/sensor-2> ;
+    tree:node <by-sensor/sensor-2> ;
+  ] .
+```
+
 
 This supports three key consumption modes for monitoring data:
 
 * retrieving historical data incrementally,
 * staying synchronized with newly produced events, and
-* avoiding repeated reliance on centralized query endpoints. 
+* avoiding repeated reliance on centralized query endpoints.
 
 ### Fragmentation as a design lever
 
@@ -49,7 +82,12 @@ In MuMo, observations are fragmented along the operational dimensions that curat
 
 > `group-x / sensor-x / year / month / day`
 
-This keeps fragments small and stable over time (e.g., daily fragments do not grow indefinitely), while retaining a navigable structure that allows clients to focus on the relevant group, sensors, and time window. 
+This keeps fragments small and stable over time (e.g., daily fragments do not grow indefinitely), while retaining a navigable structure that allows clients to focus on the relevant group, sensors, and time window.
+Note that the group-level fragmentation is flattened: the fragment tree does not encode the group hierarchy itself. Instead, parent–child relationships between groups are provided separately in the group metadata, which is sufficient for navigation.
+
+![Figure 1: LDES fragmentation overview example, first fragmenting on location, then on group and lastly on time.](LDES.drawio.svg){#fig:ldes width=80%}
+
+Figure \ref{fig:ldes} illustrates the fragmentation strategy chosen for MuMo as a concrete example; we refer back to this tree throughout the remainder of the paper when discussing /TODO.
 
 This publication model proved particularly suitable in cross-institutional settings because it allows consumers to process only the data they are authorized to access, without requiring providers to expose tailored query endpoints. 
 
@@ -82,7 +120,9 @@ Solid authorization mechanisms such as Web Access Control (WAC) enforce access r
 
 Because LDES allows the publisher to decide how events are partitioned into resources (fragments), MuMo chooses a fragmentation strategy that makes the group the first-class boundary: the group subtree becomes the unit of sharing. 
 
-In the deployed system, authentication affects the first level of the hierarchy: users gain access to the subtree corresponding to a group, which implicitly grants access to all sensors and time slices within that group. 
+In the deployed system, authentication is enforced at the first level of the fragment tree: users are granted access to the subtree for a given group, which implicitly includes all sensors and time slices published under that group.
+The corresponding ACL files are generated from the dashboard configuration; granting a user access to a group also grants access to all of that group’s descendants.
+Because the fragment tree uses a flattened group partition, a single change in the dashboard can therefore update the effective authorization for many fragments at once.
 
 The same structure also makes it explicit that finer-grained authorization would be technically possible (e.g., sensor-level or time-range-level restrictions), but MuMo does not activate those options to remain aligned with what museum staff can practically configure in the authoritative dashboard. 
 
@@ -91,23 +131,24 @@ The same structure also makes it explicit that finer-grained authorization would
 
 Figure \ref{fig:deploy-overview} shows how MuMo bridges the legacy monitoring dashboard with Solid-based identity and authorization at runtime. The key operational principle is that the dashboard remains the authoritative interface for staff, while its group-based decisions are reflected into Solid-side enforcement. 
 
-![Figure 1: deployment overview](Components.drawio.svg){#fig:deploy-overview width=80%}
+![Figure 2: deployment overview](Components.drawio.svg){#fig:deploy-overview width=80%}
 
 ### Runtime components
 
 A MuMo dataspace consists of four main components.
 
-**Component 1 — PHP dashboard (admin & group management).**\
+**Component 1 — Solid Identity Provider (IdP).**\
+The IdP is where users log in (with Solid-OIDC). After login it identifies them by their WebID, which MuMo uses as the handle for access control. A deployment can run its own IdP to issue WebIDs locally, but it can also accept WebIDs from other providers, so identity does not have to be centralized.
+
+**Component 2 — PHP dashboard (admin & group management).**\
 The dashboard is the control plane where administrators manage groups and group hierarchies (including recursive nesting), user-to-group assignments, and cross-institution sharing by granting group access to WebIDs. WebIDs may originate from the deployment’s local Solid IdP or an external provider such as Inrupt; in the dashboard they function as stable identifiers for granting/revoking group access. 
 
-**Component 2 — Solid Pod hosting LDES resources (data plane).**\
+**Component 3 — Solid Pod hosting LDES resources (data plane).**\
 The Solid Pod hosts the published resources (including the LDES fragment tree) and enforces WAC authorization before serving protected resources. Requests are interpreted in terms of which protected subtree (group/sensor/time path) is being accessed and whether the requester’s authenticated WebID is authorized. 
 
-**Component 3 — ACL generator (policy materialization service).**\
-The ACL generator bridges the dashboard’s group model with Solid’s resource-level authorization. It receives synchronized configuration (WebID → groups and the group hierarchy) and materializes WAC ACL documents on demand. Operationally, its function is: given a request targeting a particular group, return the effective ACL representation for that scope. This avoids manual ACL maintenance and keeps the Solid-side authorization view consistent with the dashboard configuration. 
+**Component 4 — ACL generator (policy materialization service).**\
+The ACL generator bridges the dashboard’s group model with Solid’s resource-level authorization. It receives synchronized configuration (WebID → groups and the group hierarchy) and materializes WAC ACL documents on demand. Operationally, its function is: given a request targeting a particular group, return the effective ACL representation for that scope. This avoids manual ACL maintenance and keeps the Solid-side authorization view consistent with the dashboard configuration.
 
-**Component 4 — Solid Identity Provider (IdP).**\
-The Solid IdP authenticates WebIDs under the local deployment’s authority. MuMo does not require a centralized identity authority: when a user presents a WebID from another IdP, authentication can occur against that remote IdP as well, consistent with standard Solid/OIDC behavior. 
 
 ### End-to-end request flow
 
