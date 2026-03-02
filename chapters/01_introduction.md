@@ -1,9 +1,23 @@
+# Introduction & Motivation
+
 In cultural heritage institutions, environmental parameters such as temperature, relative humidity, and light exposure directly influence the long-term preservation of collection objects [@laborda2022concept].
 Museums therefore invest in digital infrastructures for continuous environmental monitoring and traceable reporting [@laborda2022concept;@michalski2007ideal].
 
 A wide range of sensing technologies is already used in practice, including data loggers and long-running wireless sensor network deployments in museum buildings [@rodriguez2010integrating]. Yet these systems typically remain tightly coupled to proprietary (and often legacy) dashboards or local infrastructures [@Monitoring2025]. As a consequence, monitoring data is frequently siloed: it is difficult to combine measurements across installations, to align monitoring data with other institutional sources, or to selectively share a well-scoped subset of measurements with external partners under enforceable access control. This fragmentation reduces the analytical and documentary value of monitoring data and makes cross-organizational reuse unnecessarily costly.
 
-This paper reports on MuMo (Museum Monitoring), a three-year applied research project (2022–2025) that explored how dataspace principles can be applied to museum environmental monitoring in real-world settings—prioritizing incremental integration, heterogeneous sources, and governance. Rather than proposing new sensing technologies or replacing existing platforms, MuMo focuses on breaking down data silos by integrating semantic technologies, decentralized data publication, and access control mechanisms with existing systems and workflows.
+This paper reports on MuMo (Museum Monitoring), a three-year applied research project, funded by the Flemish Government, that investigates how museum environmental monitoring can be made more reusable, interoperable, and selectively shareable across organizational boundaries—without forcing museums to replace their day-to-day operational tooling. 
+The project included both a hardware and firmware aspect, and a software / dataspace aspect, this paper reflects on the software and dataspace aspect.
+
+MuMo is driven by monitoring needs that are best understood as three usage modes:
+
+* Operational oversight
+    Staff need near-continuous insight into readings, time-series views, and alerts when conditions leave acceptable ranges.
+* Long-term documentation
+    Museums need access to historical exposure conditions over extended periods, so they can reconstruct how an object’s environment evolved across locations and throughout its lifecycle.
+* Selective collaboration and sharing
+    When multiple parties are involved—most notably during loans—access must be manageable and bounded [@hu2014guide]. Practically, this means permissions that can be limited by (i) a subset of sensors/rooms, (ii) a defined time window, and (iii) organizational boundary. 
+
+The loan scenario is a key stress test. Loan agreements frequently include environmental constraints, and the lending institution needs trustworthy insight into the conditions experienced by an object while it is hosted elsewhere. At the same time, the borrowing institution is typically unable—and often unwilling—to expose its full internal monitoring landscape. In practice, this leads to ad-hoc exports and manual reporting, introducing delays, duplicate effort, and reduced transparency[@halevy2006principles;@franklin2005databases].
 
 This paper makes three contributions: (1) an in-use account of deploying dataspace principles for environmental monitoring in museums, (2) a concrete architectural integration of semantic modeling, event-based publication, and decentralized governance with legacy systems, and (3) empirically grounded lessons on aligning access control and data sharing mechanisms with institutional practice. 
 

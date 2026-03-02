@@ -1,3 +1,5 @@
+# Observations and Lessons Learned
+
 The in-use scenarios presented above highlight how specific architectural and modeling decisions shaped the practical use of MuMo in museum monitoring contexts. Rather than evaluating individual technologies in isolation, this section reflects on how these choices interacted with real-world constraints and practices.
 
 ## Solid as an Institutional Boundary Mechanism

@@ -1,3 +1,5 @@
+# Impact for the Digital Humanities Community
+
 Many Digital Humanities projects rely on data that is collected continuously over long periods of time and embedded in local infrastructures, such as sensor data, annotations, or evolving metadata. In practice, such data often remains siloed within project-specific systems, limiting its reuse, comparability, and shareability across institutional boundaries.
 
 Digital Humanities researchers have increasingly emphasized that the sustainability of digital resources is not only a technical issue but also an institutional and socio-technical one, shaped by funding horizons, maintenance practices, and governance constraints [@tucker2022facing; @fenlon2020sustaining].

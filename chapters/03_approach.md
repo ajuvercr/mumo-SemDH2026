@@ -1,3 +1,5 @@
+# System and Approach Overview
+
 MuMo supports cross-institutional environmental monitoring without replacing the monitoring infrastructure museums already operate. Instead, it adds a semantic publication and governance layer that enables decentralized access and controlled sharing of monitoring data across institutions. Concretely, MuMo (i) represents monitoring data and its evolving context semantically, (ii) publishes append-only time series as incrementally consumable event streams, and (iii) enforces sharing decisions using Solid-based identity and authorization mechanisms. 
 
 To keep the architecture readable and avoid repeating the same rationale in multiple places, this chapter is organized as a stack: Data model, Publication layer, Governance layer, and Operationalization (components and end-to-end request flow).

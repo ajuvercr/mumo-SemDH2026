@@ -1,3 +1,5 @@
+# In-Use Scenarios
+
 This section illustrates how the MuMo dataspace architecture is used in practice by museum professionals to analyze, share, and contextualize environmental monitoring data.
 
 ## Scenario 1: Analyzing Environmental Conditions Over Time
