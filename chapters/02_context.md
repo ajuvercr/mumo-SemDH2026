@@ -1,42 +1,31 @@
+# Background and Design Constraints
 
-The MuMo (Museum Monitoring) project was a three-year applied research project aimed at supporting museums in the long-term monitoring of environmental conditions around collection objects. Many museums—especially smaller institutions—lack continuous insight into parameters such as temperature, humidity, or light exposure, despite these being critical for conservation and often contractually relevant during object loans.
+To avoid ambiguity, we use MuMo v1 for the earlier prototype and MuMo v2 for the work presented in this paper. Unless stated otherwise, “MuMo” refers to MuMo v2.
 
-## Operational Setting
+MuMo v1 originated from the observation that environmental monitoring data in museums is difficult to access and reuse outside vendor dashboards. To assess what could be achieved with modest resources, the Fashion Museum Antwerp built an initial prototype to collect measurements and visualize them in a lightweight dashboard.
+This monitoring setup centered on a Raspberry Pi connected to a PHP dashboard. 
+Based on the prototype’s demonstrated potential, the museum applied for funding to extend the work.
 
-MuMo was deployed in real museum environments and focused on low-maintenance, long-running installations. Custom ultra-low-power sensing hardware was developed to operate for approximately one year without recharging. Sensors were placed near artworks or storage locations and continuously measured environmental parameters. Due to the physical and organizational constraints of museum spaces, the system had to function with minimal intervention once deployed.
+## Starting point: MuMo v1
 
-Measurements were transmitted via The Things Network and ingested into an existing (legacy) monitoring dashboard. This dashboard became the primary operational interface for museum staff and therefore strongly shaped how data could be accessed, interpreted, and shared.
+MuMo v2 starts from MuMo v1, which already supported core operational monitoring: ingestion and persistence of sensor readings, time-series visualization, alerting, and basic export functionality. MuMo v1’s dashboard also supported user and group management aligned with museum workflows, enabling staff to manage access within an institution in terms of responsibilities and spaces.
+In practice, these groups reflect a nested location hierarchy: from the museum or site level down to individual rooms and storage areas, and—when needed—even to fine-grained containers such as cabinets, shelves, or specific boxes.
 
-## Legacy Dashboard Constraints
+At the same time, MuMo v1 made visible the limitations that motivated MuMo v2’s focus: data remained largely bound to a single dashboard instance, exports were the primary sharing mechanism, and interoperability and cross-institution governance were not first-class concerns.
 
-The existing dashboard provided:
+## Scope: extending rather than replacing existing systems
 
-* User and group management, including recursively defined groups
-* Node management corresponding to deployed sensors
-* Basic visualization through simple time-series graphs
+MuMo v2 is explicitly not a “rip-and-replace” effort. Museums already depend on established dashboards and workflows that are difficult to change in day-to-day practice. Consequently, MuMo v2 keeps a dashboard-centric workflow as the primary operational interface for staff—where sensors are configured, readings are inspected, and alerts are handled—while adding a complementary data layer aimed at long-term reuse and cross-institution sharing. 
 
-Access control was **group-based and coarse-grained**, sufficient for internal monitoring within a single institution but not designed for cross-institutional collaboration. Importantly, the dashboard could not be replaced or fundamentally re-engineered within the scope of the project, requiring MuMo to operate within these constraints.
+This design stance reflects practical constraints in museum IT: successful changes must remain compatible with institutional autonomy, limited technical staffing, and long-running deployments. MuMo v2 therefore preserves the operational loop (“measure → view → react”) while enabling monitoring data to be reused and selectively shared beyond a single dashboard when needed. 
 
-## Cross-Institutional Access and Loans
+## What MuMo v2 adds: new hardware and a dataspace-oriented layer
 
-A central real-world use case was **the monitoring of artworks during loans between museums**. Lending institutions often require insight into the environmental conditions under which an object is kept while on loan, without being granted broader access to the borrowing museum’s infrastructure or internal data.
+Building on this baseline, MuMo v2 advances both hardware and software while keeping dashboard-centric workflows intact. On the hardware side, the project develops custom ultra-low-power sensors designed for long battery life and integrates LoRaWAN-based transmission\footnote{\url{https://www.thethingsnetwork.org/docs/lorawan/architecture/}} to support robust deployments.
+Measurements captured by the MuMo v2 monitoring devices were transmitted to off‑the‑shelf gateways and routed through The Things Network, where they were then ingested into an existing (legacy) monitoring dashboard. This dashboard became the primary operational interface for museum staff and therefore strongly shaped how data could be accessed, interpreted, and shared. 
+On the software side, MuMo v2 introduces the capabilities needed for reuse and selective sharing: (i) semantic representation of monitoring data, (ii) incremental/event-based publication, and (iii) an authorization approach that can operate across institutional boundaries while remaining administratively feasible for museum staff.
 
-In practice, this requirement translates into:
+## Summary: context as a design constraint
 
-* access limited to a subset of sensors,
-* bounded by the duration of the loan,
-* manageable by non-technical museum staff.
-
-Although often described as “fine-grained access control,” the actual operational need is **group-level authorization**: sensors associated with a specific loan can be grouped, and access to that group can be granted temporarily to another institution.
-
-## Requirements for Data Sharing
-
-These scenarios impose several practical requirements:
-
-* Data must be shareable across **institutional boundaries**.
-* Access must respect existing group-based authorization practices.
-* Users must be able to access data originating from multiple museum setups.
-* Identity management cannot assume a single central authority.
-
-These requirements motivated an architecture in which monitoring data could be published, discovered, and accessed across organizational boundaries, while remaining compatible with legacy systems and established museum workflows.
+In MuMo v2, the central context is the combination of (1) long-running, append-only monitoring data, (2) operational tooling that cannot be replaced, and (3) collaboration scenarios that require selective, revocable access across organizational boundaries. MuMo v2 is therefore shaped by a pragmatic objective: introduce interoperability and governance-aware sharing while preserving institutional autonomy and established workflows.
 

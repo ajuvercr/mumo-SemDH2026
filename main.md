@@ -1,11 +1,16 @@
 ---
-title: "Museum Monitoring"
+title: "Museum Monitoring: an environmental monitoring dataspace using The Things Network, Solid, and LDES"
 abstract: |
-    Museums increasingly deploy environmental monitoring systems (e.g., data loggers and sensor networks) to support preventive conservation of cultural heritage objects. However, monitoring data is often captured and accessed through proprietary vendor software and local infrastructures, which makes reuse, integration, and controlled cross-institution sharing difficult —particularly in object loan scenarios.
-    This paper reports on MuMo (Museum Monitoring), a three-year applied research project that explored how dataspace principles can be applied to environmental monitoring in real museum settings. Rather than replacing existing systems, MuMo integrates semantic data modeling, Linked Data Event Streams, and Solid-based data governance with a legacy monitoring dashboard. By combining semantically linked stream fragments with Solid access control, clients can prune irrelevant branches while providers can restrict access at natural boundaries (e.g., per group or sensor), enabling decentralized data publication, selective cross-institutional access, and client-side aggregation across independent deployments.
-    We present the system design and describe how it is used in practice through a set of in-use scenarios, including longitudinal analysis of environmental conditions, controlled data sharing during loans, and multi-source data integration.
-    The paper further reflects on design trade-offs, particularly the choice of group-based access control aligned with existing tools, despite the technical feasibility of finer-grained authorization.
-    The contribution of this work lies in the lessons learned from deploying a dataspace-oriented architecture under real institutional constraints. These insights are relevant to a broad range of Digital Humanities projects involving long-running data collection, distributed governance, and interoperable yet non-centralized infrastructures.
+    Museums increasingly deploy environmental monitoring systems (e.g., data loggers and sensor networks) to support preservation of cultural heritage objects.
+    However, monitoring data is often captured and accessed through proprietary vendor software, which makes reuse, integration, and controlled cross-institution sharing difficult—particularly in object loan scenarios.
+    This paper reports on MuMo (Museum Monitoring), a three-year applied research project that explored how dataspace principles can be applied to environmental monitoring in real museum settings.
+    Rather than replacing existing systems, MuMo extends a legacy monitoring dashboard with semantic data modeling, Linked Data Event Streams, and Solid-compliant data access management.
+    We present the system design, where environmental monitoring data is semantically described and published with access controlled fragments as a stream.
+    The semantic links between these fragments allow clients to prune irrelevant branches while providers can restrict access at natural boundaries (e.g., per location or sensor).
+    Further, we describe how MuMo is used in practice through a set of in-use scenarios,
+    where the system enables (1) decentralized data publication for longitudinal analysis of environmental conditions, (2) selective cross-institutional data sharing during object loans, and (3) client-side data integration and aggregation across independent deployments.
+    In practice, this dataspace-oriented deployment reveals design trade-offs while preserving institutional autonomy: museums control their data and authorization policies end-to-end, supporting trusted data sharing across organizational boundaries.
+    The deployed system and its insights are thus relevant to a broad range of (Digital Humanities) projects that involve long-running data integration under distributed governance.
 keywords:
     - Digital Humanities
     - Dataspaces
@@ -26,21 +31,14 @@ authors:
     email: "ben.demeester@ugent.be"
     fnmark: 1
 
-  - name: "Julian "
+  - name: "Julián Rojas"
     affils: [1]
     orcid: "0000-0002-9421-8566"
     email: "JulianAndres.RojasMelendez@UGent.be"
     fnmark: 1
 
-  - name: "Dieter Suls "
+  - name: "Dieter Suls"
     affils: [2]
-    orcid: "0000-0002-9421-8566"
-    email: "dieter.suls@momu.be"
-    fnmark: 1
-
-  - name: "Tobias Hendrickx "
-    affils: [2]
-    orcid: "0000-0002-9421-8566"
     email: "dieter.suls@momu.be"
     fnmark: 1
 
@@ -58,7 +56,6 @@ fntext:
     text: "These authors contributed equally."
 ---
 
-# Introduction & Motivation
 
 <!--
 * What problem in Semantic Digital Humanities are you addressing?
@@ -70,8 +67,6 @@ Key signal: This problem emerged from real DH work, not theory.
 
 !include chapters/01_introduction.md
 
-
-# Context of Use
 
 <!--
 This section is crucial and often underdeveloped in weak submissions.
@@ -91,8 +86,6 @@ Reviewers want to see that your semantic solution responds to messy reality.
 !include chapters/02_context.md
 
 
-# System and Approach Overview
-
 <!--
 Describe the system as used, not as architecturally ideal.
 
@@ -107,7 +100,6 @@ Diagrams help here, but are not mandatory.
 !include chapters/03_approach.md
 
 
-# In-Use Scenarios
 
 <!--
 This is what differentiates an in-use paper from a demo or system paper.
@@ -128,7 +120,6 @@ Narrative-style descriptions are welcome and expected.
 !include chapters/04_scenarios.md
 
 
-# Observations and Lessons Learned
 
 <!--
 This is often the most valued section.
@@ -147,7 +138,6 @@ Negative results are not a problem—lack of reflection is.
 !include chapters/05_lessons.md
 
 
-# Impact for the Digital Humanities Community
 
 <!--
 Tie your experience back to SemDH’s audience:
@@ -160,7 +150,6 @@ This is where generalization, not evaluation, happens.
 
 !include chapters/06_impact.md
 
-# Conclusion and Future Work
 
 <!--
 * Concrete next steps based on real use

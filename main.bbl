@@ -1,15 +1,9 @@
-\begin{thebibliography}{25}
+\begin{thebibliography}{24}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
-
-\bibitem[CID(2024)]{CIDOC2024}
-Loan-related data entry survey -- final results (13 january 2024), January
-  2024.
-\newblock URL
-  \url{https://cidoc.mini.icom.museum/working-groups/documentation-standards/loan-related-data-entry-survey-2024-01-13/}.
 
 \bibitem[Mon(2025)]{Monitoring2025}
 Environmental monitoring, December 2025.
@@ -112,8 +106,8 @@ Jaime Laborda, Ana~Mar{\'\i}a Garc{\'\i}a-Castillo, Ricardo Mercado, Andrea
   Colpaert]{VSDS2025}
 Dwight~Van Lancker, Steven Logghe, Juli{\'a}n~Andr{\'e}s Rojas, Annelies~De
   Craene, Ziggy Vanlishout, and Pieter Colpaert.
-\newblock Semantic and technically interoperable data exchange
-  in the flanders smart data space.
+\newblock Semantic and technically interoperable data exchange in the flanders
+  smart data space.
 \newblock In Gianluca Demartini, Katja Hose, Maribel Acosta, Matteo Palmonari,
   Gong Cheng, Hala Skaf-Molli, Nicolas Ferranti, Daniel Hern{\'a}ndez, and
   Aidan Hogan, editors, \emph{The Semantic Web -- ISWC 2024}, pages 289--303,
