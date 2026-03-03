@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: plainnat.bst
+Database file #1: references.bib
+Warning--entry type for "Monitoring2025" isn't style-file defined
+--line 221 of file references.bib
+Warning--to sort, need author or key in Monitoring2025
+Warning--empty publisher in gaia-x
+You've used 24 entries,
+            2773 wiz_defined-function locations,
+            753 strings with 10649 characters,
+and the built_in function-call counts, 13212 in all, are:
+= -- 1154
+> -- 962
+< -- 19
++ -- 327
+- -- 303
+* -- 1119
+:= -- 2067
+add.period$ -- 85
+call.type$ -- 24
+change.case$ -- 170
+chr.to.int$ -- 24
+cite$ -- 51
+duplicate$ -- 531
+empty$ -- 916
+format.name$ -- 330
+if$ -- 2745
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 17
+newline$ -- 138
+num.names$ -- 94
+pop$ -- 340
+preamble$ -- 1
+purify$ -- 144
+quote$ -- 0
+skip$ -- 453
+stack$ -- 0
+substring$ -- 391
+swap$ -- 88
+text.length$ -- 9
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 259
+warning$ -- 2
+while$ -- 107
+width$ -- 0
+write$ -- 340
+(There were 3 warnings)

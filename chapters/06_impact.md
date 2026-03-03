@@ -8,8 +8,6 @@ The experience reported in this paper suggests that **dataspace-oriented approac
 
 The use of **semantic representations as infrastructural connectors**, rather than as expressive modeling exercises, further supports interoperability in constrained environments. Lightweight semantic alignment enables independently managed datasets to be combined, extended, and reinterpreted over time, without requiring uniform tooling or deep semantic expertise from end users.
 
-Access control emerged as a critical dimension of data reuse. Rather than pursuing maximal technical expressiveness, the project highlights the importance of aligning authorization mechanisms with existing organizational practices. Group-based access control, when grounded in curatorial workflows, can provide sufficient protection and flexibility while remaining understandable and manageable in daily operation.
-
 Finally, breaking down data silos enables new forms of longitudinal and comparative analysis that are difficult to achieve with isolated systems. The ability to combine data from multiple independent sources—under controlled access conditions—opens opportunities for richer contextualization and collaboration in a wide range of Digital Humanities scenarios.
 
 Together, these observations point toward a pragmatic path for DH infrastructures that emphasizes decentralization, semantic interoperability, and governance-aware design over comprehensive but fragile integration solutions.

@@ -31,7 +31,7 @@ authors:
     email: "ben.demeester@ugent.be"
     fnmark: 1
 
-  - name: "Julian Rojas"
+  - name: "Julián Rojas"
     affils: [1]
     orcid: "0000-0002-9421-8566"
     email: "JulianAndres.RojasMelendez@UGent.be"
@@ -39,7 +39,6 @@ authors:
 
   - name: "Dieter Suls"
     affils: [2]
-    orcid: "0000-0002-9421-8566"
     email: "dieter.suls@momu.be"
     fnmark: 1
 
@@ -151,7 +150,6 @@ This is where generalization, not evaluation, happens.
 
 !include chapters/06_impact.md
 
-# Conclusion and Future Work
 
 <!--
 * Concrete next steps based on real use

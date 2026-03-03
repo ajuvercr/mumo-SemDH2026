@@ -1,15 +1,9 @@
-\begin{thebibliography}{23}
+\begin{thebibliography}{24}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
-
-\bibitem[CID(2024)]{CIDOC2024}
-Loan-related data entry survey -- final results (13 january 2024), January
-  2024.
-\newblock URL
-  \url{https://cidoc.mini.icom.museum/working-groups/documentation-standards/loan-related-data-entry-survey-2024-01-13/}.
 
 \bibitem[Mon(2025)]{Monitoring2025}
 Environmental monitoring, December 2025.
@@ -60,6 +54,19 @@ Katrina~Simone Fenlon.
   community-centred strategies.
 \newblock \emph{International Journal of Digital Curation}, 15\penalty0
   (1):\penalty0 13--13, 2020.
+
+\bibitem[Franklin et~al.(2005)Franklin, Halevy, and
+  Maier]{franklin2005databases}
+Michael Franklin, Alon Halevy, and David Maier.
+\newblock From databases to dataspaces: a new abstraction for information
+  management.
+\newblock \emph{ACM Sigmod Record}, 34\penalty0 (4):\penalty0 27--33, 2005.
+
+\bibitem[Halevy et~al.(2006)Halevy, Franklin, and Maier]{halevy2006principles}
+Alon Halevy, Michael Franklin, and David Maier.
+\newblock Principles of dataspace systems.
+\newblock In \emph{Proceedings of the twenty-fifth ACM SIGMOD-SIGACT-SIGART
+  symposium on Principles of database systems}, pages 1--9, 2006.
 
 \bibitem[Haller et~al.(2017)Haller, Janowicz, Cox, Lefrançois, Taylor,
   Le~Phuoc, Lieberman, García-Castro, and Stadler]{ssn-sosa}

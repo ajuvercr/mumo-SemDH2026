@@ -21,7 +21,9 @@ This design stance reflects practical constraints in museum IT: successful chang
 
 ## What MuMo v2 adds: new hardware and a dataspace-oriented layer
 
-Building on this baseline, MuMo v2 advances both hardware and software while keeping dashboard-centric workflows intact. On the hardware side, the project develops custom ultra-low-power sensors designed for long battery life and integrates LoRaWAN-based transmission to support robust deployments. On the software side, MuMo v2 introduces the capabilities needed for reuse and selective sharing: (i) semantic representation of monitoring data, (ii) incremental/event-based publication, and (iii) an authorization approach that can operate across institutional boundaries while remaining administratively feasible for museum staff.
+Building on this baseline, MuMo v2 advances both hardware and software while keeping dashboard-centric workflows intact. On the hardware side, the project develops custom ultra-low-power sensors designed for long battery life and integrates LoRaWAN-based transmission\footnote{\url{https://www.thethingsnetwork.org/docs/lorawan/architecture/}} to support robust deployments.
+Measurements captured by the MuMo v2 monitoring devices were transmitted to off‑the‑shelf gateways and routed through The Things Network, where they were then ingested into an existing (legacy) monitoring dashboard. This dashboard became the primary operational interface for museum staff and therefore strongly shaped how data could be accessed, interpreted, and shared. 
+On the software side, MuMo v2 introduces the capabilities needed for reuse and selective sharing: (i) semantic representation of monitoring data, (ii) incremental/event-based publication, and (iii) an authorization approach that can operate across institutional boundaries while remaining administratively feasible for museum staff.
 
 ## Summary: context as a design constraint
 

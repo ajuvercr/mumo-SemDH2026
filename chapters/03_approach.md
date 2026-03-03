@@ -36,36 +36,45 @@ MuMo therefore publishes monitoring data using LDES [@semic_support_centre; @van
 LDES supports interoperable publication of evolving datasets in a way that enables replication and synchronization across organizational boundaries without requiring a centralized query service.
 
 An LDES publication is typically organized as a fragment tree: events are partitioned into smaller resources (fragments), and each fragment exposes typed links to other fragments through machine-interpretable relations in the Linked Data representation.
-Listing X illustrates this with a first-level partitioning by sensor: the entrypoint fragment links, via `tree:EqualToRelation` on `sosa:madeBySensor`, to a dedicated fragment for each sensor.
+Listing \ref{list:relation} illustrates this with a first-level partitioning by sensor: the entrypoint fragment links, via `tree:EqualToRelation` on `sosa:madeBySensor`, to a dedicated fragment for each sensor.
 In practice, such partitionings can be composed: once a client has navigated to the fragment for the relevant sensor, that fragment can in turn act as the root of a second tree (e.g., partitioned by time windows such as month/day), enabling clients to narrow down first by source and then by interval without scanning unrelated observations.
 
-```turtle
-@base <https://mumo.faro.be/data/>.
-@prefix tree: <https://w3id.org/tree#> .
-@prefix ldes: <https://w3id.org/ldes#> .
-@prefix sosa: <http://www.w3.org/ns/sosa/>.
 
-# LDES entrypoint
-<stream>
-  a ldes:EventStream ;
-  tree:view <by-sensor> .
+\begin{listing}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{@base}\NormalTok{ }\StringTok{<https://mumo.faro.be/data/>}\NormalTok{ }\OperatorTok{.}
+\KeywordTok{@prefix}\NormalTok{ }\VariableTok{tree:}\NormalTok{ }\StringTok{<https://w3id.org/tree\#>}\NormalTok{ }\OperatorTok{.}
+\KeywordTok{@prefix}\NormalTok{ }\VariableTok{ldes:}\NormalTok{ }\StringTok{<https://w3id.org/ldes\#>}\NormalTok{ }\OperatorTok{.}
+\KeywordTok{@prefix}\NormalTok{ }\VariableTok{sosa:}\NormalTok{ }\StringTok{<http://www.w3.org/ns/sosa/>}\OperatorTok{.}
 
-# <by-sensor> fragment
-<by-sensor>
-  a tree:Node ;
-  tree:relation [
-    a tree:EqualToRelation ;
-    tree:path sosa:madeBySensor ;
-    tree:value <https://mumo.faro.be/sensors/sensor-1> ;
-    tree:node <by-sensor/sensor-1> ;
-  ] ;
-  tree:relation [
-    a tree:EqualToRelation ;
-    tree:path sosa:madeBySensor;
-    tree:value <https://mumo.faro.be/sensors/sensor-2> ;
-    tree:node <by-sensor/sensor-2> ;
-  ] .
-```
+\CommentTok{\# LDES entrypoint}
+\StringTok{<stream>}
+\NormalTok{  }\KeywordTok{a}\NormalTok{ }\VariableTok{ldes:}\FunctionTok{EventStream}\NormalTok{ }\OperatorTok{;}
+\NormalTok{  }\VariableTok{tree:}\FunctionTok{view}\NormalTok{ }\StringTok{<by-sensor>}\NormalTok{ }\OperatorTok{.}
+
+\CommentTok{\# <by-sensor> fragment}
+\StringTok{<by-sensor>}
+\NormalTok{  }\KeywordTok{a}\NormalTok{ }\VariableTok{tree:}\FunctionTok{Node}\NormalTok{ }\OperatorTok{;}
+\NormalTok{  }\VariableTok{tree:}\FunctionTok{relation}\NormalTok{ }\OperatorTok{[}
+\NormalTok{    }\KeywordTok{a}\NormalTok{ }\VariableTok{tree:}\FunctionTok{EqualToRelation}\NormalTok{ }\OperatorTok{;}
+\NormalTok{    }\VariableTok{tree:}\FunctionTok{path}\NormalTok{ }\VariableTok{sosa:}\FunctionTok{madeBySensor}\NormalTok{ }\OperatorTok{;}
+\NormalTok{    }\VariableTok{tree:}\FunctionTok{value}\NormalTok{ }\StringTok{<https://mumo.faro.be/sensors/sensor-1>}\NormalTok{ }\OperatorTok{;}
+\NormalTok{    }\VariableTok{tree:}\FunctionTok{node}\NormalTok{ }\StringTok{<by-sensor/sensor-1>}\NormalTok{ }\OperatorTok{;}
+\NormalTok{  }\OperatorTok{]}\NormalTok{ }\OperatorTok{;}
+\NormalTok{  }\VariableTok{tree:}\FunctionTok{relation}\NormalTok{ }\OperatorTok{[}
+\NormalTok{    }\KeywordTok{a}\NormalTok{ }\VariableTok{tree:}\FunctionTok{EqualToRelation}\NormalTok{ }\OperatorTok{;}
+\NormalTok{    }\VariableTok{tree:}\FunctionTok{path}\NormalTok{ }\VariableTok{sosa:}\FunctionTok{madeBySensor}\OperatorTok{;}
+\NormalTok{    }\VariableTok{tree:}\FunctionTok{value}\NormalTok{ }\StringTok{<https://mumo.faro.be/sensors/sensor-2>}\NormalTok{ }\OperatorTok{;}
+\NormalTok{    }\VariableTok{tree:}\FunctionTok{node}\NormalTok{ }\StringTok{<by-sensor/sensor-2>}\NormalTok{ }\OperatorTok{;}
+\NormalTok{  }\OperatorTok{]}\NormalTok{ }\OperatorTok{.}
+\end{Highlighting}
+\end{Shaded}
+
+\centering
+\caption{LDES fragmentation overview example, first fragmenting on location, then on group and lastly on time.}
+\label{list:relation}
+\end{listing}
 
 
 This supports three key consumption modes for monitoring data:
@@ -78,16 +87,16 @@ This supports three key consumption modes for monitoring data:
 
 A central design choice in LDES is the fragmentation strategy: how events are grouped into fragments. MuMo uses fragmentation not only as a performance mechanism, but as a way to reflect how museums work with monitoring data and how sharing is scoped in practice. 
 
-In MuMo, observations are fragmented along the operational dimensions that curators and technicians naturally use: group, sensor, and time. Concretely, observations are published under a hierarchy of the form:
+In MuMo, observations are fragmented along the operational dimensions that conservator and technicians naturally use: group, sensor, and time. Concretely, observations are published under a hierarchy of the form:
 
 > `group-x / sensor-x / year / month / day`
 
 This keeps fragments small and stable over time (e.g., daily fragments do not grow indefinitely), while retaining a navigable structure that allows clients to focus on the relevant group, sensors, and time window.
 Note that the group-level fragmentation is flattened: the fragment tree does not encode the group hierarchy itself. Instead, parent–child relationships between groups are provided separately in the group metadata, which is sufficient for navigation.
 
-![Figure 1: LDES fragmentation overview example, first fragmenting on location, then on group and lastly on time.](LDES.drawio.svg){#fig:ldes width=80%}
+![LDES fragmentation overview example, first fragmenting on location, then on group and lastly on time.](LDES.drawio.svg){#fig:ldes width=80%}
 
-Figure \ref{fig:ldes} illustrates the fragmentation strategy chosen for MuMo as a concrete example; we refer back to this tree throughout the remainder of the paper when discussing /TODO.
+Figure \ref{fig:ldes} illustrates the fragmentation strategy chosen for MuMo as a concrete example; we refer back to this tree throughout the remainder of the paper.
 
 This publication model proved particularly suitable in cross-institutional settings because it allows consumers to process only the data they are authorized to access, without requiring providers to expose tailored query endpoints. 
 
@@ -111,7 +120,6 @@ MuMo mirrors the group-based authorization model already present in the legacy d
 
 This is an advantage in museum practice. Loan scenarios typically require a partner to access all monitoring data relevant to a particular object/location over a period, while keeping the rest of the monitoring infrastructure private. Fine-grained authorization can be expressive, but prior work highlights that it introduces substantial configuration and usability complexity in operational settings, especially for non-technical users [@hu2014guide]. 
 
-
 Group-level permissions are therefore sufficient and manageable, avoiding administrative overhead that would undermine adoption. 
 
 ### Policy-aligned fragmentation (LDES + Solid together)
@@ -125,13 +133,14 @@ The corresponding ACL files are generated from the dashboard configuration; gran
 Because the fragment tree uses a flattened group partition, a single change in the dashboard can therefore update the effective authorization for many fragments at once.
 
 The same structure also makes it explicit that finer-grained authorization would be technically possible (e.g., sensor-level or time-range-level restrictions), but MuMo does not activate those options to remain aligned with what museum staff can practically configure in the authoritative dashboard. 
+In the current deploy an ACL file exists for the first layer in Figure \ref{fig:ldes}, but each entry point to a subtree could have an associated ACL file.
+
 
 ## Operationalization: components and request flow
 
-
 Figure \ref{fig:deploy-overview} shows how MuMo bridges the legacy monitoring dashboard with Solid-based identity and authorization at runtime. The key operational principle is that the dashboard remains the authoritative interface for staff, while its group-based decisions are reflected into Solid-side enforcement. 
 
-![Figure 2: deployment overview](Components.drawio.svg){#fig:deploy-overview width=80%}
+![MuMo deployment overview with four components, an Identity Provider, a dashboard, a solid pod with the LDES publications, and an ACL file generator.](Components.drawio.svg){#fig:deploy-overview width=80%}
 
 ### Runtime components
 
