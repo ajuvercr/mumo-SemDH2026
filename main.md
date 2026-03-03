@@ -44,9 +44,9 @@ authors:
 
 addresses:
   - id: 1
-    text: "Ghent University - IMEC, "
+    text: "IDLab, Departement of Electronics and Information Systems, Ghent University - imec, Belgium"
   - id: 2
-    text: "Fashion Museum Antwerp, Nationalestraat 28, 2000 Antwerpen"
+    text: "Fashion Museum Antwerp, Nationalestraat 28, 2000 Antwerpen, Belgium"
 
 cortext:
   - id: 1
