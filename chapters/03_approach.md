@@ -111,7 +111,7 @@ This publication model suits cross-institutional settings because it allows cons
 Cross-institution collaboration (especially loans) requires selective, revocable access across organizational boundaries.
 Meanwhile, museums want to keep operational control over their monitoring infrastructures.
 
-MuMo addresses this—conform to and supported by related work [@slabbinck2023linked]—by combining decentralized LDES publication with Solid-based authorization. Solid provides a framework in which storage (called _Solid pods_), identity, and access control are decoupled from specific applications, enabling the same published resources to be reused by multiple clients without funneling all access through a centralized service [@solidprotocol2022; @solid_24; @solid_25].
+MuMo addresses this—conform to and supported by related work [@slabbinck2023linked]—by combining decentralized LDES publication with Solid-based authorization. Solid provides a framework in which storage (called _Solid Pods_), identity, and access control are decoupled from specific applications, enabling the same published resources to be reused by multiple clients without funneling all access through a centralized service [@solidprotocol2022; @solid_24; @solid_25].
 
 MuMo’s governance layer consists of (1) institutional endpoints with (2) group-based authorization (3) aligned with the LDES fragmentation strategy.
 
@@ -121,7 +121,7 @@ MuMo’s governance layer consists of (1) institutional endpoints with (2) group
 
 <!-- BDM: what do you mean by 'delegated' access? I would remove that from the title -->
 
-In MuMo, Solid pods act as institutional data endpoints rather than user-centric storage. The practical effect is that a museum can publish monitoring resources as long-lived datasets under its governance, while granting external parties access only to the parts required for a collaboration (e.g., a loan group) and revoking that access afterward. 
+In MuMo, Solid Pods act as institutional data endpoints rather than user-centric storage. The practical effect is that a museum can publish monitoring resources as long-lived datasets under its governance, while granting external parties access only to the parts required for a collaboration (e.g., a loan group) and revoking that access afterward. 
 
 <!-- BDM: I would skip the following, I don't see the added benefit of mixing in some sota here. should be a separate section -->
 <!-- MuMo’s emphasis is operational: enabling decentralized publication and enforceable access control aligned with existing workflows. This differs from approaches that focus primarily on cryptographic immutability via attestation and private ledgers [@ross2024digital].  -->
