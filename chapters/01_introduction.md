@@ -13,7 +13,7 @@ MuMo is motivated by monitoring needs that can be summarized as three usage mode
 * Operational oversight
     Staff need near-continuous insight into readings, time-series views, and alerts when conditions leave acceptable ranges.
 * Long-term documentation
-    Museums need access to historical exposure conditions over extended periods, so they can reconstruct how an object’s environment evolved across locations and throughout its lifecycle.
+    Museums need access to historical exposure conditions over extended periods, so they can reconstruct how an object’s environment evolved across locations and organizations, and throughout its lifecycle.
 * Selective collaboration and sharing
     When multiple parties are involved—most notably during loans—access must be manageable and bounded [@hu2014guide]. Practically, this means permissions that can be limited by (i) a subset of sensors/rooms, (ii) a defined time window, and (iii) the involved organizations. 
 
@@ -21,4 +21,6 @@ The loan scenario is a key stress test. Loan agreements frequently include envir
 
 This paper makes three contributions: (1) an in-use account of deploying dataspace principles for environmental monitoring in museums, (2) a concrete architectural integration of semantic modeling, event-based publication, and decentralized governance with legacy systems, and (3) empirically grounded lessons on aligning access control and data sharing mechanisms with institutional practice. 
 
-After describing the project context in Section 2, we present MuMo’s architecture and approach in Section 3, and illustrate its use in practice through in-use scenarios in Section 4, before discussing lessons learned and implications for the Digital Humanities community.
+After describing the project context in Section 2, we present MuMo’s architecture and approach, and implementation in Section 3 and section 4 respectively, and illustrate its use in practice through in-use scenarios in Section 5, before discussing lessons learned and implications for the Digital Humanities community in Section 6 and Section 7, respectively.
+<!-- TODO add a Related work section -->
+We conclude ins Section 8.
