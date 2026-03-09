@@ -19,18 +19,8 @@ MuMo is motivated by the following monitoring needs:
 
 The loan scenario is a key stress test. Loan agreements frequently include environmental constraints\footnote{\url{https://collectionstrust.org.uk/wp-content/uploads/2017/11/Loans-out-lending-objects.pdf}, p11}, and the lending institution needs trustworthy insight into the conditions experienced by an object while it is hosted elsewhere. At the same time, the borrowing institution is typically unable—and often unwilling—to expose its full internal monitoring landscape. In practice, this leads to ad-hoc exports and manual reporting, introducing delays, duplicate effort, and reduced transparency [@halevy2006principles;@franklin2005databases].
 
-<!-- BDM: I would skip the following, I don't see the added benefit of mixing in some sota here. should be a separate section -->
-<!-- MuMo’s emphasis is operational: enabling decentralized publication and enforceable access control aligned with existing workflows. This differs from approaches that focus primarily on cryptographic immutability via attestation and private ledgers [@ross2024digital].  -->
-<!-- BDM: so? group-based is still fine-grained, no? This feels like something that should be part of related work, no need to excuse yourself here.-->
-<!-- Fine-grained authorization can be expressive, but prior work highlights that it introduces substantial configuration and usability complexity in operational settings, especially for non-technical users [@hu2014guide].  -->
-<!-- BDM: I don't see the added value of this paragraph. Isn't this sota on a wrong location? -->
-<!-- More broadly, European data space initiatives emphasize federated trust, identity, and governance mechanisms to enable cross-organizational data exchange while preserving sovereignty, aligning with the boundary-oriented role Solid plays in MuMo [@idsa2023ram4; @gaia-x]. -->
-<!--
-Similar architectural patterns can be observed in other domain-specific data space initiatives, such as the Flanders Smart Data Space, where semantic standardization and Linked Data Event Streams are combined to support decentralized data publication across organizational boundaries [@VSDS2025].
--->
-
 This paper makes three contributions: (1) an in-use account of deploying dataspace principles for environmental monitoring in museums, (2) a concrete architectural integration of semantic modeling, event-based publication, and decentralized governance with legacy systems, and (3) empirically grounded lessons on aligning access control and data sharing mechanisms with institutional practice. 
 
-After describing the project context in Section 2, we present MuMo’s architecture and approach, and implementation in Section 3 and section 4 respectively, and illustrate its use in practice through in-use scenarios in Section 5, before discussing lessons learned and implications for the Digital Humanities community in Section 6 and Section 7, respectively.
-<!-- TODO add a Related work section -->
-We conclude ins Section 8.
+After describing the project context in Section 2, we present MuMo’s architecture and approach, and implementation in Sections 3 and 4, respectively, and illustrate its use in practice through in-use scenarios in Section 5.
+We then discuss lessons learned in Section 6, reflect on its implications for the Digital Humanities community in Section 7, and position our work with respect to related work in Section 8. We conclude in Section 9.
+

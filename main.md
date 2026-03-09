@@ -150,6 +150,7 @@ This is where generalization, not evaluation, happens.
 
 !include chapters/06_impact.md
 
+!include chapters/08_related.md
 
 <!--
 * Concrete next steps based on real use
@@ -157,4 +158,5 @@ This is where generalization, not evaluation, happens.
 -->
 
 !include chapters/07_conclusion.md
+
 

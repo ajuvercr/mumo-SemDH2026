@@ -13,8 +13,7 @@ MuMo provides a semantic representation of all information managed in the dashbo
 
 ### Modeling sensors and observations
 
-<!-- BDM: I restructured so you end with the most important part -->
-MuMo adopts the Flemish OSLO (Open Standaarden voor Linkende Organisaties) vocabularies and application profiles [@oslo2016]. These vocabularies and application profiles—maintained by the Flemish governmental organization Digitaal Vlaanderen—reuse established international semantic standards for interoperable cross-organizational data exchange.
+MuMo adopts the Flemish OSLO (Open Standaarden voor Linkende Organisaties) vocabularies and application profiles [@buyle2016oslo]. These vocabularies and application profiles—maintained by the Flemish governmental organization Digitaal Vlaanderen—reuse established international semantic standards for interoperable cross-organizational data exchange.
 
 In particular, MuMo uses the OSLO Sensoren en Bemonstering application profile\footnote{\url{https://data.vlaanderen.be/doc/applicatieprofiel/sensoren-en-bemonstering/}}, which reuses the W3C Semantic Sensor Network ontology (SSN/SOSA) [@compton2012ssn; @ssn-sosa]. SSN/SOSA is particularly suitable because it separates (i) the sensor, (ii) the observation, and (iii) the feature of interest being observed\footnote{A primer in Dutch can be found here \url{https://museummonitoring.github.io/MUMO-Primer/}}. This allows MuMo to represent sensor redeployment and contextual change (e.g., a sensor moved to a different space) without rewriting historical observations that were produced under earlier conditions.
 
@@ -149,17 +148,15 @@ The IdP is where users log in (with Solid-OIDC). After login it identifies them 
 **Component 2 — dashboard (admin & group management).**\
 The dashboard is the control plane where administrators manage groups and group hierarchies (including recursive nesting), user-to-group assignments, and cross-institution sharing by granting group access to WebIDs. WebIDs may originate from the deployment’s local Solid IdP or an external provider such as Inrupt; in the dashboard they function as stable identifiers for granting/revoking group access. 
 
-**Component X — LDES connector.**\
-<!-- BDM: don't you also have the dashboard-to-ldes pipeline as component? -->
-+++++
-
 **Component 3 — Solid Pod hosting LDES resources (data plane).**\
-The Solid Pod hosts the published resources (including the LDES fragment tree) and enforces WAC authorization before serving protected resources. Requests are interpreted in terms of which protected subtree (group/sensor/time path) is being accessed and whether the requester’s authenticated WebID is authorized. 
+The Solid Pod hosts the published resources (as the LDES fragment tree) and enforces WAC authorization before serving protected resources. Requests are interpreted in terms of which protected subtree (group/sensor/time path) is being accessed and whether the requester’s authenticated WebID is authorized. 
+Data for these resources originate from the dashboard.
+
 
 **Component 4 — ACL generator (policy materialization service).**\
 The ACL generator bridges the dashboard’s group model with Solid’s resource-level authorization. It receives synchronized configuration (WebID → groups and the group hierarchy) and materializes WAC ACL documents on demand. Operationally, its function is: given a request targeting a particular group, return the effective ACL representation for that scope. This avoids manual ACL maintenance and keeps the Solid-side authorization view consistent with the dashboard configuration.
 
-**Component Y — Investigating dashboard.**\
+**Component 5 — Investigating dashboard.**\
 A additional client-side dashboard—published at \url{https://museummonitoring.github.io/graphs/}—retrieves sensor descriptions first, determines the user’s authorized scope, and then incrementally consumes only the relevant observation streams.
 This allows consumers to combine data from multiple sources in a unified user experience, without requiring centralized aggregation.
 This is consistent with the principle that integration occurs at the point of use.

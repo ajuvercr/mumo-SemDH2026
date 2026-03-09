@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.16)  3 MAR 2026 13:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.16)  9 MAR 2026 16:19
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1813,7 +1813,7 @@ xlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2025
 /texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc} </usr/local/texlive/2025/texmf-dist/
 tex/latex/doclicense/images/doclicense-CC-by-88x31.pdf>] [2] [3]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 4
-08.
+12.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
@@ -1824,61 +1824,64 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
  [4]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 419.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 423.
 Package hyperref Info: bookmark level for unknown listing defaults to 0 on inpu
-t line 448.
+t line 452.
  [5]
 Package svg Info: Last page of `./svg-inkscape/LDES.drawio_svg-tex.pdf' is 1 on
- input line 490.
+ input line 483.
 
 (./svg-inkscape/LDES.drawio_svg-tex.pdf_tex
-<./svg-inkscape/LDES.drawio_svg-tex.pdf, id=108, page=1, 467.49657pt x 166.3715
+<./svg-inkscape/LDES.drawio_svg-tex.pdf, id=124, page=1, 467.49657pt x 166.3715
 7pt>
 File: ./svg-inkscape/LDES.drawio_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/LDES.drawio_svg-tex.pdf, page 1>
 Package pdftex.def Info: ./svg-inkscape/LDES.drawio_svg-tex.pdf , page1 used on
  input line 56.
 (pdftex.def)             Requested size: 362.37569pt x 128.96707pt.
-) [6
-pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
-s been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.553 
-       <./svg-inkscape/LDES.drawio_svg-tex.pdf>]
+)
 Package svg Info: Last page of `./svg-inkscape/Components.drawio_svg-tex.pdf' i
-s 1 on input line 597.
+s 1 on input line 514.
 
 (./svg-inkscape/Components.drawio_svg-tex.pdf_tex
-<./svg-inkscape/Components.drawio_svg-tex.pdf, id=177, page=1, 784.05421pt x 48
+<./svg-inkscape/Components.drawio_svg-tex.pdf, id=130, page=1, 784.05421pt x 48
 2.92921pt>
 File: ./svg-inkscape/Components.drawio_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/Components.drawio_svg-tex.pdf, page 1>
 Package pdftex.def Info: ./svg-inkscape/Components.drawio_svg-tex.pdf , page1 u
 sed on input line 56.
 (pdftex.def)             Requested size: 362.37569pt x 223.20387pt.
-) [7] [8
+) [6
+pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.527 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.686 \subsection
-                 {Scenario 1: Analyzing Environmental Conditions Over <./svg-in
-kscape/Components.drawio_svg-tex.pdf>] [9] [10] [11] [12] (./main.bbl [13]
-[14]) [15] (./main.aux)
+l.527 
+       <./svg-inkscape/LDES.drawio_svg-tex.pdf> <./svg-inkscape/Components.draw
+io_svg-tex.pdf
+
+pdfTeX warning: pdflatex (file ./svg-inkscape/Components.drawio_svg-tex.pdf): P
+DF inclusion: multiple pdfs with page group included in a single page
+>] [7] [8] [9] [10] [11] [12] (./main.bbl [13] [14]) [15] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-29>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 32506 strings out of 468662
- 603585 string characters out of 5441703
+ 32500 strings out of 468662
+ 603292 string characters out of 5441703
  1195746 words of memory out of 5000000
- 60275 multiletter control sequences out of 15000+600000
- 740697 words of font info for 236 fonts, out of 8000000 for 9000
+ 60265 multiletter control sequences out of 15000+600000
+ 740719 words of font info for 236 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
- 122i,21n,121p,11228b,2548s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 122i,20n,121p,11228b,2548s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/lo
 cal/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive
 /2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf
@@ -1894,9 +1897,9 @@ public/lm/lmsy5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/l
 msy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><
 /usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local
 /texlive/2025/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on main.pdf (15 pages, 610756 bytes).
+Output written on main.pdf (15 pages, 636067 bytes).
 PDF statistics:
- 507 PDF objects out of 1000 (max. 8388607)
- 86 named destinations out of 1000 (max. 500000)
- 65358 words of extra memory for PDF output out of 74296 (max. 10000000)
+ 539 PDF objects out of 1000 (max. 8388607)
+ 90 named destinations out of 1000 (max. 500000)
+ 65366 words of extra memory for PDF output out of 74296 (max. 10000000)
 
