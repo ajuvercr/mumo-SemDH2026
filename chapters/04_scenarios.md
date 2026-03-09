@@ -25,9 +25,7 @@ This keeps retrieval lightweight even as the overall monitoring history keeps gr
 
 A second, critical scenario concerns the monitoring of artworks during loans between museums. Lending institutions typically require access to environmental data from the borrowing museum to ensure that conservation conditions meet agreed standards, while borrowing institutions must retain control over their broader monitoring infrastructure.
 
-<!-- BDM: I think you need to specify this is part of the advanced dashboard -->
-
-In MuMo, this scenario is supported through **group-based access control aligned with Solid identities**. For a loan, the borrowing museum creates a dedicated group in the legacy dashboard and associates the relevant sensors with that group. Access to this group is then granted to specific WebID accounts belonging to the lending institution.
+In MuMo, this scenario is supported through **group-based access control aligned with Solid identities** with the investigating dashboard. For a loan, the borrowing museum creates a dedicated group in the legacy dashboard and associates the relevant sensors with that group. Access to this group is then granted to specific WebID accounts belonging to the lending institution.
 
 Because access control is enforced at the level of published data fragments, external users can authenticate using their own WebIDs and access only the data streams corresponding to the loan group. No centralized user management or data replication is required. Once the loan period ends, sensors should be taken out of the group, so new data is not shared.
 

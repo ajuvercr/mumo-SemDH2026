@@ -1,18 +1,13 @@
 # System and Approach Overview
 
-<!-- BDM: I suggest to number the 'monitoring needs' or 'usage modes' of the introdcution chapter (and only use one term please), so you don't need to be redundant in this chapter, with alternative formulations of the same thing. I dislike the extravagant and alternative description of your paragraphs below, and would much prefer something like
-
+<!-- AV: this is still redundant, but I'm thinking about how to solve it -->
 In this chapter, we discuss the developed system that (1) keeps operational oversight, aligned with the familiar day-to-day monitoring workflow by extending the existing dashboard application; (2) provides long-term documentation through a semantic data model and representation (section 3.1); and (3) enables selective data sharing through group-and-time-constrained access controll (section 3.3).
-We further detail the governance layer and operationalization in sections 3.3 and 3.4, respectively-->
-Chapter 3 explains how MuMo turns those three needs from the introduction into a concrete system: it keeps the familiar day-to-day monitoring workflow intact, while making the resulting data durable enough to interpret years later and scoped enough to share only what a partner should see.
-The core idea is to treat monitoring not as a dashboard export, but as a governed dataset that can be reused across time and across institutions—especially in loan situations where transparency is necessary, but full internal exposure is not.
 
-We begin by introducing the data representation MuMo relies on and the way monitoring observations are captured and published over time. Next, we describe how access and sharing are controlled so that institutions can expose selected views without relinquishing ownership. Finally, we walk through the concrete components and their interaction to show how these ideas come together in the running system.
+We further detail the governance layer and operationalization in sections 3.3 and 3.4, respectively.
 
 
 ## Data model and semantic representation
 
-<!-- BDM: I removed redundancy below -->
 To ensure interoperability,
 MuMo provides a semantic representation of all information managed in the dashboard, both environmental observations (e.g., temperature, humidity, light exposure) and sensor configuration metadata (e.g., group/location).
 
@@ -21,8 +16,7 @@ MuMo provides a semantic representation of all information managed in the dashbo
 <!-- BDM: I restructured so you end with the most important part -->
 MuMo adopts the Flemish OSLO (Open Standaarden voor Linkende Organisaties) vocabularies and application profiles [@oslo2016]. These vocabularies and application profiles—maintained by the Flemish governmental organization Digitaal Vlaanderen—reuse established international semantic standards for interoperable cross-organizational data exchange.
 
-In particular, MuMo uses the OSLO Sensoren en Bemonstering application profile\footnote{\url{https://data.vlaanderen.be/doc/applicatieprofiel/sensoren-en-bemonstering/}}, which reuses the W3C Semantic Sensor Network ontology (SSN/SOSA) [@compton2012ssn; @ssn-sosa]. SSN/SOSA is particularly suitable because it separates (i) the sensor, (ii) the observation, and (iii) the feature of interest being observed. This allows MuMo to represent sensor redeployment and contextual change (e.g., a sensor moved to a different space) without rewriting historical observations that were produced under earlier conditions.
-<!-- BDM: @Arthur, didn't you have a data model spec published online you can link to here? -->
+In particular, MuMo uses the OSLO Sensoren en Bemonstering application profile\footnote{\url{https://data.vlaanderen.be/doc/applicatieprofiel/sensoren-en-bemonstering/}}, which reuses the W3C Semantic Sensor Network ontology (SSN/SOSA) [@compton2012ssn; @ssn-sosa]. SSN/SOSA is particularly suitable because it separates (i) the sensor, (ii) the observation, and (iii) the feature of interest being observed\footnote{A primer in Dutch can be found here \url{https://museummonitoring.github.io/MUMO-Primer/}}. This allows MuMo to represent sensor redeployment and contextual change (e.g., a sensor moved to a different space) without rewriting historical observations that were produced under earlier conditions.
 
 ### Representing changing context as configuration events
 
@@ -45,7 +39,6 @@ and as such allows two key consumption modes for monitoring data: replication of
 We introduce the LDES principles,
 after which we clarify how we applied LDES in MuMo.
 
-<!-- BDM: Having only 1 subsection is an anti-pattern, so I created another subsection -->
 ### LDES Principles
 
 In LDES, data fragments are typically organized as a tree: measurements come in as events, these events are partitioned into published resources (called _fragments_), and each fragment exposes typed links to other fragments through machine-interpretable relations in RDF.
@@ -119,24 +112,13 @@ MuMo’s governance layer consists of (1) institutional endpoints with (2) group
 
 ### Institutional endpoints
 
-<!-- BDM: what do you mean by 'delegated' access? I would remove that from the title -->
-
 In MuMo, Solid Pods act as institutional data endpoints rather than user-centric storage. The practical effect is that a museum can publish monitoring resources as long-lived datasets under its governance, while granting external parties access only to the parts required for a collaboration (e.g., a loan group) and revoking that access afterward. 
-
-<!-- BDM: I would skip the following, I don't see the added benefit of mixing in some sota here. should be a separate section -->
-<!-- MuMo’s emphasis is operational: enabling decentralized publication and enforceable access control aligned with existing workflows. This differs from approaches that focus primarily on cryptographic immutability via attestation and private ledgers [@ross2024digital].  -->
 
 ### Authorization model: group-based sharing as an operational advantage
 
 In Mumo, the authorization model is group-based: access is granted at the level of sensor groups (mirrored from the groups managed in the dashboard) rather than individual observations.
 This is sufficient in museum practice:
 loan scenarios typically require a partner to access the monitoring data relevant to a particular object's location over a time period, while keeping all other monitoring data private.
-
-<!-- BDM: so? group-based is still fine-grained, no? This feels like something that should be part of related work, no need to excuse yourself here.-->
-<!-- Fine-grained authorization can be expressive, but prior work highlights that it introduces substantial configuration and usability complexity in operational settings, especially for non-technical users [@hu2014guide].  -->
-
-<!-- BDM: this feels redundant -->
-<!-- Group-level permissions are therefore sufficient and manageable, avoiding administrative overhead that would undermine adoption.  -->
 
 ### Policy-aligned fragmentation (LDES + Solid together)
 
@@ -148,15 +130,14 @@ In the deployed system, authentication is enforced at the first level of the fra
 The corresponding ACL files are generated from the dashboard configuration; granting a user access to a group also grants access to all of that group’s descendants.
 Because the fragment tree uses a flattened group partition, a single change in the dashboard can therefore update the effective authorization for many fragments at once.
 
-<!-- BDM: I guess the limitation is that the access control is on the level of the fragmentation strategy, i.e., you give access to a full day of data, you cannot give acces to a half day of data, as that conflicts with the fragmentation strategy? -->
 
-
-The same structure also makes it explicit that finer-grained authorization would be technically possible (e.g., sensor-level or time-range-level restrictions), but MuMo does not activate those options to remain aligned with what museum staff can practically configure in the authoritative dashboard. 
+The same structure also makes it explicit that finer-grained authorization would be technically possible (e.g., sensor-level or time-range-level restrictions), but MuMo does not activate those options to remain aligned with what museum staff can practically configure in the dashboard. 
+This only goes as far as the fragmentation allows, for example you cannot give access to half a day of data, as a half day is not a fragment, only full days exist.
 In the current deploy an ACL file exists for the first layer in Figure \ref{fig:ldes}, but each entry point to a subtree could have an associated ACL file.
 
 # Implementation
 
-Figure \ref{fig:deploy-overview} shows how MuMo bridges the monitoring dashboard with synchronized Solid-based identity and authorization at runtime.
+Figure \ref{fig:deploy-overview} shows how MuMo bridges the dashboard with synchronized Solid-based identity and authorization at runtime.
 
 ## Runtime components
 
@@ -165,7 +146,7 @@ MuMo consists of four main components.
 **Component 1 — Solid Identity Provider (IdP).**\
 The IdP is where users log in (with Solid-OIDC). After login it identifies them by their WebID, which MuMo uses as the handle for access control. A deployment can run its own IdP to issue WebIDs locally, but it can also accept WebIDs from other providers, so identity does not have to be centralized.
 
-**Component 2 — PHP dashboard (admin & group management).**\
+**Component 2 — dashboard (admin & group management).**\
 The dashboard is the control plane where administrators manage groups and group hierarchies (including recursive nesting), user-to-group assignments, and cross-institution sharing by granting group access to WebIDs. WebIDs may originate from the deployment’s local Solid IdP or an external provider such as Inrupt; in the dashboard they function as stable identifiers for granting/revoking group access. 
 
 **Component X — LDES connector.**\
@@ -178,24 +159,22 @@ The Solid Pod hosts the published resources (including the LDES fragment tree) a
 **Component 4 — ACL generator (policy materialization service).**\
 The ACL generator bridges the dashboard’s group model with Solid’s resource-level authorization. It receives synchronized configuration (WebID → groups and the group hierarchy) and materializes WAC ACL documents on demand. Operationally, its function is: given a request targeting a particular group, return the effective ACL representation for that scope. This avoids manual ACL maintenance and keeps the Solid-side authorization view consistent with the dashboard configuration.
 
-**Component Y — LDES dashboard.**\
-A additional client-side dashboard—published at \url{+++++}—retrieves sensor descriptions first, determines the user’s authorized scope, and then incrementally consumes only the relevant observation streams.
+**Component Y — Investigating dashboard.**\
+A additional client-side dashboard—published at \url{https://museummonitoring.github.io/graphs/}—retrieves sensor descriptions first, determines the user’s authorized scope, and then incrementally consumes only the relevant observation streams.
 This allows consumers to combine data from multiple sources in a unified user experience, without requiring centralized aggregation.
 This is consistent with the principle that integration occurs at the point of use.
 
 
 ## Flows
 
-<!-- BDM: TODO: be consistent in dashboard naming (legacy dashboard vs dashboard vs PHP dashboard -- I want one term), why not use the names that you used durgin the MuMo closing? Viewing dashboard and Investigating dashboard, or something like that? -->
-
 Control path:
 
-1. Admin configuration: an administrator updates group membership in the PHP dashboard by associating WebIDs with groups and maintaining the group hierarchy. 
+1. Admin configuration: an administrator updates group membership in the dashboard by associating WebIDs with groups and maintaining the group hierarchy. 
 2. Sync to policy service: these settings are synchronized to the ACL generator as (WebID → groups) plus the group hierarchy.
 
 Data path:
 
-1. Data update: a measurement is ingested in the PHP dashboard.
+1. Data update: a measurement is ingested in the dashboard.
 2. User data request (data path): a client requests an LDES resource from the Solid Pod. 
 3. ACL resolution: before serving the resource, the Solid Pod determines which ACL scope applies (which group subtree is being accessed) and consults the ACL generator for the effective ACL. 
 4. Authentication + authorization: the Solid Pod validates identity via the relevant IdP (local or remote) and evaluates whether the authenticated WebID is granted access by the generated ACL. 
