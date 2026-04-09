@@ -1,4 +1,4 @@
-# Related work
+# Related work {#sec:related}
 
 Environmental monitoring is a well-established concern in museum practice, since temperature, humidity, and light exposure directly affect object preservation. Prior work has explored wireless and low-cost monitoring infrastructures for museums, showing the value of continuous sensing but largely focusing on local data capture and dashboard use rather than interoperable publication or cross-institutional sharing [@laborda2022concept; @rodriguez2010integrating].
 

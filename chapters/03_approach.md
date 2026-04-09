@@ -1,21 +1,21 @@
-# System and Approach Overview
+# System and Approach Overview {#sec:approach}
 
 <!-- AV: this is still redundant, but I'm thinking about how to solve it -->
-In this chapter, we discuss the developed system that (1) keeps operational oversight, aligned with the familiar day-to-day monitoring workflow by extending the existing dashboard application; (2) provides long-term documentation through a semantic data model and representation (section 3.1); and (3) enables selective data sharing through group-and-time-constrained access controll (section 3.3).
+In this chapter, we discuss the developed system that (1) keeps operational oversight, aligned with the familiar day-to-day monitoring workflow by extending the existing dashboard application; (2) provides long-term documentation through a semantic data model and representation (Section \ref{sec:datamodel}); and (3) enables selective data sharing through group-and-time-constrained access controll (Section \ref{sec:governance}).
 
-We further detail the governance layer and operationalization in sections 3.3 and 3.4, respectively.
+We further detail the governance layer and operationalization in Sections \ref{sec:governance} and \ref{sec:implementation}, respectively.
 
 
-## Data model and semantic representation
+## Data model and semantic representation {#sec:datamodel}
 
-To ensure interoperability,
-MuMo provides a semantic representation of all information managed in the dashboard, both environmental observations (e.g., temperature, humidity, light exposure) and sensor configuration metadata (e.g., group/location).
+Semantic Web technologies are central to MuMo's approach: they provide the interoperability layer that enables data to be published, discovered, and integrated across independent deployments without requiring shared infrastructure or coordinated schemas.
+MuMo provides a semantic representation—using RDF as the underlying data model—of all information managed in the dashboard, both environmental observations (e.g., temperature, humidity, light exposure) and sensor configuration metadata (e.g., group/location). By grounding all published data in established Linked Data standards, MuMo ensures that any standards-compliant client can consume its data without bespoke integration effort.
 
 ### Modeling sensors and observations
 
 MuMo adopts the Flemish OSLO (Open Standaarden voor Linkende Organisaties) vocabularies and application profiles [@buyle2016oslo]. These vocabularies and application profiles—maintained by the Flemish governmental organization Digitaal Vlaanderen—reuse established international semantic standards for interoperable cross-organizational data exchange.
 
-In particular, MuMo uses the OSLO Sensoren en Bemonstering application profile\footnote{\url{https://data.vlaanderen.be/doc/applicatieprofiel/sensoren-en-bemonstering/}}, which reuses the W3C Semantic Sensor Network ontology (SSN/SOSA) [@compton2012ssn; @ssn-sosa]. SSN/SOSA is particularly suitable because it separates (i) the sensor, (ii) the observation, and (iii) the feature of interest being observed\footnote{A primer in Dutch can be found here \url{https://museummonitoring.github.io/MUMO-Primer/}}. This allows MuMo to represent sensor redeployment and contextual change (e.g., a sensor moved to a different space) without rewriting historical observations that were produced under earlier conditions.
+In particular, MuMo uses the OSLO Sensoren en Bemonstering application profile\footnote{\url{https://data.vlaanderen.be/doc/applicatieprofiel/sensoren-en-bemonstering/}}, which reuses the W3C Semantic Sensor Network ontology (SSN/SOSA) [@compton2012ssn; @ssn-sosa]. SSN/SOSA is particularly suitable because it separates (i) the sensor, (ii) the observation, and (iii) the feature of interest being observed\footnote{A primer in Dutch can be found here \url{https://museummonitoring.github.io/MUMO-Primer/}}. This allows MuMo to represent sensor redeployment and contextual change (e.g., a sensor moved to a different space) without rewriting historical observations that were produced under earlier conditions. In our running example, this means Museum B can deploy a sensor near the borrowed painting and later reassign it—without losing the observation history during the loan period.
 
 ### Representing changing context as configuration events
 
@@ -26,9 +26,9 @@ Monitoring data exhibits two different dynamics:
 
 MuMo makes this distinction explicit by publishing configuration metadata as a versioned event stream, allowing consumers to reconstruct which context applied when an observation was produced. 
 
-Group membership (or location) are encoded explicitly in this configuration stream as versioned entities. This is not merely descriptive metadata: it enables downstream systems to interpret observations correctly and consistently apply sharing rules that are expressed in terms museum staff already use (groups representing rooms, objects, loan packages, etc.). 
+Information about the group of the sensor (the location) is published with the versioned sensor metadata to make sure it is fully expressed in terms that the museum staff are already using (groups representing rooms, objects, loan packages, etc.).
 
-## Publication layer: Linked Data Event Streams
+## Publication layer: Linked Data Event Streams {#sec:ldes}
 
 To publish this append-only log of measurements, MuMo applies the Linked Data Event Streams (LDES) technical standard\footnote{\url{https://semiceu.github.io/LinkedDataEventStreams/}}. LDES is maintained by SEMIC and actively promoted in Flanders (Digitaal Vlaanderen) for interoperable data sharing [@semic_support_centre; @vanlancker2021ldes].
 
@@ -91,14 +91,14 @@ In MuMo, observations are fragmented along the operational dimensions that conse
 
 > `group-x / sensor-x / year / month / day`
 
-This keeps fragments small and stable over time (e.g., daily fragments do not grow indefinitely), while retaining a navigable structure that allows clients to focus on the relevant group, sensors, and time window (example shown in Figure \ref{fig:ldes}).
+This keeps fragments small and stable over time (e.g., daily fragments do not grow indefinitely), while retaining a navigable structure that allows clients to focus on the relevant group, sensors, and time window (example shown in Figure \ref{fig:ldes}). In the loan example, Museum B publishes the borrowed painting's monitoring data under a dedicated loan group; Museum A's client can then navigate directly to that group's subtree and retrieve only the relevant observations.
 Note that the group-level fragmentation is flattened: the fragment tree does not encode the group hierarchy itself. Instead, parent–child relationships between groups are provided separately in the group metadata, which is sufficient for navigation.
 
 ![LDES fragmentation overview example, first fragmenting on location, then on group and lastly on time.](LDES.drawio.svg){#fig:ldes width=80%}
 
 This publication model suits cross-institutional settings because it allows consumers to process only the data they are authorized to access, without requiring providers to expose tailored query endpoints. 
 
-## Governance layer: Solid-based decentralized sharing
+## Governance layer: Solid-based decentralized sharing {#sec:governance}
 
 Cross-institution collaboration (especially loans) requires selective, revocable access across organizational boundaries.
 Meanwhile, museums want to keep operational control over their monitoring infrastructures.
@@ -134,7 +134,7 @@ The same structure also makes it explicit that finer-grained authorization would
 This only goes as far as the fragmentation allows, for example you cannot give access to half a day of data, as a half day is not a fragment, only full days exist.
 In the current deploy an ACL file exists for the first layer in Figure \ref{fig:ldes}, but each entry point to a subtree could have an associated ACL file.
 
-# Implementation
+# Implementation {#sec:implementation}
 
 Figure \ref{fig:deploy-overview} shows how MuMo bridges the dashboard with synchronized Solid-based identity and authorization at runtime.
 

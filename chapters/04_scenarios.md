@@ -1,4 +1,4 @@
-# In-Use Scenarios
+# In-Use Scenarios {#sec:scenarios}
 
 This section illustrates how the MuMo dataspace architecture is used in practice by museum professionals to analyze, share, and contextualize environmental monitoring data.
 
@@ -23,11 +23,11 @@ This keeps retrieval lightweight even as the overall monitoring history keeps gr
 
 ## Scenario 2: Cross-Institutional Access During Loans
 
-A second, critical scenario concerns the monitoring of artworks during loans between museums. Lending institutions typically require access to environmental data from the borrowing museum to ensure that conservation conditions meet agreed standards, while borrowing institutions must retain control over their broader monitoring infrastructure.
+A second, critical scenario concerns the monitoring of artworks during loans between museums—the situation introduced in our running example. Lending institutions typically require access to environmental data from the borrowing museum to ensure that conservation conditions meet agreed standards, while borrowing institutions must retain control over their broader monitoring infrastructure.
 
 In MuMo, this scenario is supported through **group-based access control aligned with Solid identities** with the investigating dashboard. For a loan, the borrowing museum creates a dedicated group in the legacy dashboard and associates the relevant sensors with that group. Access to this group is then granted to specific WebID accounts belonging to the lending institution.
 
-Because access control is enforced at the level of published data fragments, external users can authenticate using their own WebIDs and access only the data streams corresponding to the loan group. No centralized user management or data replication is required. Once the loan period ends, sensors should be taken out of the group, so new data is not shared.
+Because access control is enforced at the level of published data fragments, external users can authenticate using their own WebIDs and access only the data fragments corresponding to the loan group. No centralized user management or data replication is required. Once the loan period ends, sensors should be taken out of the group, so new data is not shared.
 
 This approach enables temporary, fine-grained sharing of monitoring data across institutional boundaries while remaining manageable for museum staff and compatible with existing workflows.
 
