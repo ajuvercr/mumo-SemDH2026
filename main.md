@@ -1,5 +1,5 @@
 ---
-title: "Museum Monitoring: an environmental monitoring dataspace using The Things Network, Solid, and LDES"
+title: "Museum Monitoring: an Environmental Monitoring Dataspace Using The Things Network, Solid, and LDES"
 abstract: |
     Museums increasingly deploy environmental monitoring systems (e.g., data loggers and sensor networks) to support preservation of cultural heritage objects.
     However, monitoring data is often captured and accessed through proprietary vendor software, which makes reuse, integration, and controlled cross-institution sharing difficult—particularly in object loan scenarios.
@@ -159,4 +159,8 @@ This is where generalization, not evaluation, happens.
 
 !include chapters/07_conclusion.md
 
+
+\section*{Declaration on Generative AI}
+
+During the preparation of this work, the authors used Claude Sonnet to support the writing process. In particular, the tool was employed for paraphrasing and rewording text, improving writing style, and providing formatting assistance. All scientific content, including the ideas, methodology, and conclusions, was developed by the authors. The authors carefully reviewed and edited all AI-generated suggestions and take full responsibility for the final content of the manuscript.
 

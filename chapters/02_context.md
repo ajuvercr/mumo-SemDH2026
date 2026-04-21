@@ -2,55 +2,59 @@
 
 To avoid ambiguity, we use MuMo v1 for the earlier prototype and MuMo v2 for the work presented in this paper. Unless stated otherwise, “MuMo” refers to MuMo v2.
 
-MuMo v1 originated from the observation that environmental monitoring data in museums is difficult to access and reuse outside vendor dashboards. To assess what could be achieved with modest resources, the Fashion Museum Antwerp built an initial prototype to collect measurements and visualize them in a lightweight dashboard.
-This monitoring setup centered on a Raspberry Pi connected to a PHP dashboard over WiFi.
-Based on the prototype’s demonstrated potential, the museum applied for funding to extend the work.
+MuMo v1 originated from the observation that environmental monitoring data in museums is difficult to access and reuse outside vendor dashboards. Monitoring equipment is often expensive and relies on proprietary, black-box devices that produce data locked to a single vendor platform—neither interoperable nor easily exchanged with other systems, and therefore underused for strategic purposes. To demonstrate that this could be done differently, the Fashion Museum Antwerp built an initial in-house prototype in 2019 using LoRaWAN shields, an Arduino, and a Raspberry Pi.
+Based on the prototype’s demonstrated potential, the museum and the University of Antwerp applied for funding to extend the work.
 
-The project evolved through several phases: an initial prototype phase (MuMo v1, 2021–2022), in which the Fashion Museum Antwerp developed a proof-of-concept monitoring setup; a funded development phase (2023–2025), in which MuMo v2 extended this baseline with new hardware and a dataspace-oriented software layer; and a deployment and evaluation phase (2025–2026), in which the system was put into operational use across museum sites. \autoref{fig:timeline} gives an overview of these phases.
+The project evolved through several phases: an initial prototype phase (2019), in which the Fashion Museum Antwerp identified the problem and built a first working prototype; a funded PoC phase (MuMo v1, 2020–2021), in which MoMu and the University of Antwerp developed a proof-of-concept monitoring setup using open-source hardware and a PHP dashboard under an ‘Innovative Project’ grant from the Flemish Government; and a funded development phase (MuMo v2, 2022–2025), a three-phase ‘Cultural Heritage Project’ also funded by the Flemish Government, in which the system was extended with custom hardware and a dataspace-oriented software layer before being put into operational use in 2026. \autoref{fig:timeline} gives an overview of these phases.
 
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[
   dot/.style={circle, inner sep=2.5pt},
-  lbl/.style={font=\small, align=center, text width=2.5cm}
+  lbl/.style={font=\small, align=center, text width=2.8cm}
 ]
 
 % Timeline arrow
-\draw[->, thick] (-0.3,0) -- (11.8,0);
+\draw[->, thick] (-0.3,0) -- (11.5,0);
 
-% 2021 (above) — MuMo v1 phase
+% 2019 (above) — problem identified + prototype
 \draw[gray!60] (0,0) -- (0,1.5);
 \filldraw[fill=gray!50, draw=gray!70] (0,0) circle (3pt);
-\node[lbl, above] at (0,1.5) {\textbf{2021}\\Fashion Museum\\identifies problem};
+\node[lbl, above] at (0,1.5) {\textbf{2019}\\MoMu identifies\\problem; builds\\LoRaWAN prototype};
 
-% 2022 (below) — MuMo v1 phase
+% 2020-21 (below) — MuMo v1 PoC
 \draw[gray!60] (2,0) -- (2,-1.5);
 \filldraw[fill=gray!50, draw=gray!70] (2,0) circle (3pt);
-\node[lbl, below] at (2,-1.5) {\textbf{2022}\\MuMo~v1 PoC\\complete};
+\node[lbl, below] at (2,-1.5) {\textbf{2020--21}\\MuMo~v1 PoC\\(Raspberry Pi + PHP dashboard)};
 
-% 2023 (above) — MuMo v2 development
+% 2022 (above) — MuMo v2 Phase 1 funding
 \draw[teal!70] (4,0) -- (4,1.5);
 \filldraw[fill=teal!60, draw=teal!80] (4,0) circle (3pt);
-\node[lbl, above] at (4,1.5) {\textbf{2023}\\Flemish Gov.\ funding\\secured};
+\node[lbl, above] at (4,1.5) {\textbf{2022}\\MuMo~v2 Ph.\,1\\funding secured};
 
-% 2024 (below) — MuMo v2 development
-\draw[teal!70] (6,0) -- (6,-1.5);
-\filldraw[fill=teal!60, draw=teal!80] (6,0) circle (3pt);
-\node[lbl, below] at (6,-1.5) {\textbf{2024}\\Custom hardware~\&\\dataspace prototype};
+% 2023 (below) — Phase 1: hardware + datamodel
+\draw[teal!70] (5.5,0) -- (5.5,-1.5);
+\filldraw[fill=teal!60, draw=teal!80] (5.5,0) circle (3pt);
+\node[lbl, below] at (5.5,-1.5) {\textbf{2023}\\Ph.\,1: custom\\hardware \& datamodel};
 
-% 2025 (above) — MuMo v2 development
-\draw[teal!70] (8,0) -- (8,1.5);
-\filldraw[fill=teal!60, draw=teal!80] (8,0) circle (3pt);
-\node[lbl, above] at (8,1.5) {\textbf{2025}\\Production hardware~\&\\dataspace};
+% 2024 (above) — Phase 2: field trials + dataspace prototype
+\draw[teal!70] (7,0) -- (7,1.5);
+\filldraw[fill=teal!60, draw=teal!80] (7,0) circle (3pt);
+\node[lbl, above] at (7,1.5) {\textbf{2022--24}\\Ph.\,2: field trials~\&\\dataspace prototype};
 
-% 2026 (below) — operational
-\draw[green!50!black] (10,0) -- (10,-1.5);
+% 2025 (below) — Phase 3: production
+\draw[teal!70] (8.5,0) -- (8.5,-1.5);
+\filldraw[fill=teal!60, draw=teal!80] (8.5,0) circle (3pt);
+\node[lbl, below] at (8.5,-1.5) {\textbf{2025}\\Ph.\,3: production\\hardware \& dataspace};
+
+% 2026 (above) — operational
+\draw[green!50!black] (10,0) -- (10,1.5);
 \filldraw[fill=green!50!black, draw=green!60!black] (10,0) circle (3pt);
-\node[lbl, below] at (10,-1.5) {\textbf{2026}\\System in\\operational use};
+\node[lbl, above] at (10,1.5) {\textbf{2026}\\System in\\operational use};
 
 % Phase labels along the axis
 \draw[gray!50, decorate, decoration={brace, amplitude=4pt, mirror}]
-  (-0.1,-0.25) -- (2.1,-0.25)
+  (-0.1,-0.25) -- (2.6,-0.25)
   node[midway, below=6pt, font=\footnotesize\color{gray}] {MuMo~v1};
 \draw[teal!50, decorate, decoration={brace, amplitude=4pt, mirror}]
   (3.9,-0.25) -- (10.1,-0.25)
