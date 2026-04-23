@@ -245,11 +245,11 @@ MuMo is motivated by three concrete monitoring needs. First, staff need near-con
 
 # Research questions
 
-**RQ1** — Extend legacy systems for **interoperable, semantic publication**?
+**RQ1** — How can existing monitoring infrastructure be extended to publish sensor data in a **semantically described, interoperable** way — without replacing it?
 
-**RQ2** — **Selective, revocable** cross-institutional sharing without centralizing governance?
+**RQ2** — How can institutions share data **selectively and revocably** across organizational boundaries, without a shared user directory or centralized governance?
 
-**RQ3** — What do we learn from **operational deployment**?
+**RQ3** — What do we learn from **three years of operational deployment** in a real museum context?
 
 <!-- 
 These needs translate into three research questions. RQ1 asks how dataspace principles can be applied to extend — not replace — existing museum monitoring infrastructure for semantically described, interoperable data publication. RQ2 asks how selective and revocable cross-institutional data sharing can be realized without requiring a shared user directory or centralized identity management. RQ3 asks what practical lessons emerge from actually deploying such an architecture in operational museum settings over multiple years.
@@ -286,7 +286,7 @@ These needs translate into three research questions. RQ1 asks how dataspace prin
     <div class="tl-year">2025</div>
   </div>
   <div class="tl-event">
-    <div class="tl-label-top">System in<br>operational use</div>
+    <div class="tl-label-top">System in operational use<br>(<strong>Faro</strong>)</div>
     <div class="tl-dot v2"></div>
     <div class="tl-year">2026</div>
   </div>
@@ -310,13 +310,13 @@ Data Model · LDES · Solid
 
 # Five components
 
-| Component | Role |
-|-----------|------|
-| **PHP Dashboard** | Operational interface; group management |
-| **Solid Pod + LDES** | Published observation fragments |
-| **ACL Generator** | Dashboard groups → WAC policies |
-| **Solid IdP** | Identity (local or federated) |
-| **Investigating Dashboard** | Client-side cross-source analysis |
+| Need | Component(s) |
+|------|-------------|
+| **Operational oversight** | PHP Dashboard |
+| **Long-term documentation** | Solid Pod + LDES · Investigating Dashboard |
+| **Selective collaboration** | ACL Generator · Solid IdP |
+
+The **ACL Generator** bridges them: it watches dashboard group changes and materializes WAC policies on the Pod automatically.
 
 <!-- 
 MuMo consists of five runtime components. The PHP dashboard remains the primary operational interface — staff configure sensors, inspect readings, and manage access through it, just as they did before. The Solid Pod hosts the LDES-structured observation data that clients can consume. The ACL Generator is the bridge component: it watches the dashboard's group configuration and materializes Web Access Control policies on demand. The Solid Identity Provider issues WebIDs, and can accept external ones too. Finally, the investigating dashboard is a separate client-side application for longitudinal analysis and cross-source queries.
@@ -326,14 +326,14 @@ MuMo consists of five runtime components. The PHP dashboard remains the primary 
 
 # Data model: two streams
 
-**RDF** throughout — reusing **OSLO** + **SSN/SOSA**
+**RDF** throughout — reusing **SSN/SOSA** (W3C) + **OSLO** (Flemish gov. application profile for sensor exchange)
 
 | Stream | Rate | Content |
 |--------|------|---------|
 | **Observations** | Fast, append-only | Sensor readings |
 | **Sensor metadata** | Slow, versioned | Location, group, config |
 
-SSN/SOSA separates *sensor* · *observation* · *feature of interest*
+SSN/SOSA separates *sensor* · *observation* · *feature of interest* — sensor moves don't invalidate past observations
 
 <!-- 
 MuMo uses RDF as the underlying data model, grounded in two established standards. OSLO Sensoren en Bemonstering is a Flemish governmental application profile maintained by Digitaal Vlaanderen for interoperable cross-organizational exchange. It reuses the W3C SSN/SOSA ontology, which is particularly well suited here because it cleanly separates the sensor, the observation, and the feature of interest being observed. This means a sensor can be moved to a new room without rewriting historical observations — the versioned sensor metadata records when the context changed, and consumers join on sensor URI and time to reconstruct the full context of any observation. The two streams have very different dynamics: observations are fast-moving and append-only, while sensor metadata changes slowly and is versioned as events.
@@ -361,6 +361,7 @@ MuMo uses RDF as the underlying data model, grounded in two established standard
 **Sensor metadata** *(slow)*
 ```turtle
 <sensors/node-7/v2> a sosa:Sensor ;
+  dcterms:isVersionOf <sensors/node-7> ;
   rdfs:label "Node 7 – Loan Room B" ;
   sosa:isHostedBy <locations/room-b> ;
   schema:validFrom "2025-02-01T00:00:00Z" ;
@@ -370,7 +371,7 @@ MuMo uses RDF as the underlying data model, grounded in two established standard
 </div>
 </div>
 
-Join on **sensor URI + time** → full observation context
+Join `<sensors/node-7>` + resultTime falls within validFrom–validThrough → full observation context
 
 <!-- 
 Here's a concrete example of what the data looks like. On the left, an observation: it records which sensor made it, what property was observed, the result, and the timestamp. On the right, a versioned sensor metadata record: it says that node-7 was deployed in loan room B between February and June 2025. A client reconstructs the full context of an observation by joining its sensor URI with the metadata record that was valid at the observation's result time. Crucially, when the sensor is later moved, a new metadata version is created — the observation itself is never touched.
@@ -403,7 +404,7 @@ Links carry **semantic meaning**:
 
 Clients **prune** irrelevant branches before fetching
 
-> Selective access = a navigation problem, not a query problem
+> Selective access **becomes** a navigation problem, not a query problem
 
 <!-- 
 The TREE specification defines how fragment relations are expressed. Each relation has a type, a path — the RDF property being filtered on — and a value. An EqualToRelation says: everything under this link has sosa:madeBySensor equal to sensor-1. A client that wants data for sensor-2 simply ignores that branch entirely. This is what makes LDES well suited for cross-institutional settings: providers don't need to implement bespoke query APIs. The structure of the data itself is the query interface.
@@ -453,7 +454,7 @@ Solid is a W3C specification — originally designed for decentralized social ap
 1. Museum B creates a **loan group** in the dashboard, assigns sensors
 2. Museum B grants Museum A's **WebID** access to that group
 3. Museum A authenticates and navigates only the loan subtree
-4. Loan ends → sensors removed from group → **access revoked**
+4. Loan ends → sensors removed from group → **no more data added**
 
 No shared user directory · No data replication
 
@@ -468,6 +469,17 @@ Here's how Solid handles the loan scenario end-to-end. Museum B creates a dedica
 # The System in Action
 
 A longitudinal monitoring query across a museum loan
+
+---
+
+# Faro — operational partner
+
+**Vlaams steunpunt voor cultureel erfgoed** — Flemish support centre for cultural heritage
+
+- Owns a fleet of MuMo loggers, lent to museums to **trial the system** or **supplement existing infrastructure**
+- Museums can query across Faro's Pod and their own — the investigating dashboard **combines multiple sources** in one view
+
+> The demo below uses data from the Faro Pod, but the same query interface works across any number of independent deployments
 
 ---
 
@@ -559,17 +571,38 @@ No data was copied or aggregated centrally. Each museum's Solid Pod serves its o
 
 <!-- _class: section-header -->
 
-# Conclusion
+# Tradeoffs and Conclusion
+
+---
+
+# Tradeoffs
+
+> So this fixes everything?
+
+Not quite — it's slow.
+
+> Why is it slow?
+
+Access control requires many fragments, and each fragment needs authentication. 
+
+> So just cache the fragments?
+
+While this *would* drastically improve the LDES performance, we cannot.
+Authorization defeats HTTP caching entirely.
+
+<!-- 
+Two real limitations. First, access control expressivity is hard-bounded by the TREE fragmentation strategy: you can only grant access at boundaries that exist in the tree, so hour-level access requires hour-level fragments. Second, and relatedly, every fragment request must be authenticated, which prevents HTTP caches from serving stable historical pages — the thing that normally makes LDES fast. These aren't independent: finer fragments means more uncached authenticated round-trips. The caching issue is a known open problem in the LDES ecosystem, not something MuMo introduced. A solution there — e.g. capability tokens or signed fragment URLs — would fix the performance penalty automatically.
+-->
 
 ---
 
 # Conclusion
 
-- **RQ1** — LDES + semantics extend legacy systems without replacing them
-- **RQ2** — Solid + WAC enables scoped, revocable cross-institutional sharing
-- **RQ3** — Operational feasibility > maximum technical flexibility
+- **RQ1** — LDES + SSN/SOSA extend the existing dashboard for interoperable, semantically described publication — **without replacing** any operational tooling
+- **RQ2** — Solid Pods + WAC enable scoped, revocable cross-institutional sharing **without** a shared user directory or centralized identity provider
+- **RQ3** — Group-level access and client-side integration proved sufficient in practice; **operational feasibility matters more than maximum technical flexibility**
 
-**Future work:** object-centric queries linking collection management systems with sensor streams
+**Future work:** auto-generating queries from collection management systems; linking object location history directly to sensor streams
 
 <!-- 
 To summarize. MuMo demonstrates that dataspace principles can be deployed incrementally alongside legacy systems. LDES and semantic modeling answer RQ1 by extending the existing dashboard for interoperable publication. Solid-based governance answers RQ2 by enabling selective, revocable cross-institutional sharing without centralized identity. The lessons learned — group-level access control, client-side integration, institutional pods — answer RQ3 by showing that practical, operationally feasible design choices can be both sufficient and easier to sustain than more technically ambitious alternatives. Future work will explore integrating external data sources such as collection management systems, which would enable object-centric queries across institutional boundaries.
