@@ -5,9 +5,11 @@
 \usepackage{svg}
 \usepackage{longtable}
 \usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
 \lstset{breaklines=true}
 
-\usepackage{lmodern}
+% lmodern removed: ceurart.cls loads Libertinus when available
 \usepackage{framed}
 \usepackage{xcolor} % usually already loaded, but safe
 
@@ -90,15 +92,14 @@ $endif$
 
 \begin{document}
 
-\copyrightyear{2022}
+\copyrightyear{2026}
 \copyrightclause{Copyright for this paper by its authors.
   Use permitted under Creative Commons License Attribution 4.0
   International (CC BY 4.0).}
 
 %%
 %% This command is for the conference information
-\conference{Woodstock'22: Symposium on the irreproducible science,
-  June 07--11, 2022, Woodstock, NY}
+\conference{SemDH 2026: Third International Workshop of Semantic Digital Humanities. Co-located with ESWC 2026, May 10, 2026, Dubrovnik, Croatia}
 
 \title{$title$}
 

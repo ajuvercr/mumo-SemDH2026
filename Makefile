@@ -21,6 +21,12 @@ pandoc:
 		-o main.tex
 	latexmk -pdf -shell-escape -interaction=nonstopmode -bibtex main.tex
 
+slides:
+	marp slides.md --pdf -o slides.pdf --allow-local-files
+
+web:
+	marp slides.md -o index.html --allow-local-files
+
 # Build a PDF into OUTDIR (keeps your project root clean)
 $(OUTDIR)/%.pdf: %.tex | $(OUTDIR)
 	$(LATEXMK) -$(ENGINE) -shell-escape -interaction=nonstopmode -halt-on-error \
