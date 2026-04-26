@@ -261,7 +261,7 @@ These needs translate into three research questions. RQ1 asks how dataspace prin
 
 <div class="timeline">
   <div class="tl-event">
-    <div class="tl-label-top">MoMu identifies problem
+    <div class="tl-label-top">MoMu identifies problem</div>
     <div class="tl-dot v1"></div>
     <div class="tl-year">2019</div>
   </div>
