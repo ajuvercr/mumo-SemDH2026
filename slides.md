@@ -261,7 +261,7 @@ These needs translate into three research questions. RQ1 asks how dataspace prin
 
 <div class="timeline">
   <div class="tl-event">
-    <div class="tl-label-top">MoMu identifies problem;<br>LoRaWAN prototype</div>
+    <div class="tl-label-top">MoMu identifies problem
     <div class="tl-dot v1"></div>
     <div class="tl-year">2019</div>
   </div>
@@ -286,7 +286,7 @@ These needs translate into three research questions. RQ1 asks how dataspace prin
     <div class="tl-year">2025</div>
   </div>
   <div class="tl-event">
-    <div class="tl-label-top">System in operational use<br>(<strong>Faro</strong>)</div>
+    <div class="tl-label-top">System in operational use</div>
     <div class="tl-dot v2"></div>
     <div class="tl-year">2026</div>
   </div>
@@ -326,7 +326,7 @@ MuMo consists of five runtime components. The PHP dashboard remains the primary 
 
 # Data model: two streams
 
-**RDF** throughout — reusing **SSN/SOSA** (W3C) + **OSLO** (Flemish gov. application profile for sensor exchange)
+**RDF** throughout — reusing **SSN/SOSA** (W3C)
 
 | Stream | Rate | Content |
 |--------|------|---------|
@@ -349,10 +349,10 @@ MuMo uses RDF as the underlying data model, grounded in two established standard
 **Observation** *(fast)*
 ```turtle
 <obs/e1f3> a sosa:Observation ;
-  sosa:madeBySensor <sensors/node-7> ;
+  sosa:madeBySensor <sensors/node-7/temperature> ;
   sosa:observedProperty <prop/temperature> ;
   sosa:hasSimpleResult "21.4"^^xsd:decimal ;
-  sosa:resultTime "2025-03-15T10:00:00Z" .
+  sosa:resultTime "2026-03-15T10:00:00Z" .
 ```
 
 </div>
@@ -360,18 +360,18 @@ MuMo uses RDF as the underlying data model, grounded in two established standard
 
 **Sensor metadata** *(slow)*
 ```turtle
-<sensors/node-7/v2> a sosa:Sensor ;
+<sensors/node-7/v2> a sosa:Platform ;
   dcterms:isVersionOf <sensors/node-7> ;
+  dcterms:modified "2026-02-01T00:00:00Z" ;
   rdfs:label "Node 7 – Loan Room B" ;
-  sosa:isHostedBy <locations/room-b> ;
-  schema:validFrom "2025-02-01T00:00:00Z" ;
-  schema:validThrough "2025-06-01T00:00:00Z" .
+  crm:P55_has_current_location <locations/room-b> .
+
+<sensors/node-7/v2/temperature> a sosa:Sensor ;
+  sosa:isHostedBy <sesnors/node-7/v2> .
 ```
 
 </div>
 </div>
-
-Join `<sensors/node-7>` + resultTime falls within validFrom–validThrough → full observation context
 
 <!-- 
 Here's a concrete example of what the data looks like. On the left, an observation: it records which sensor made it, what property was observed, the result, and the timestamp. On the right, a versioned sensor metadata record: it says that node-7 was deployed in loan room B between February and June 2025. A client reconstructs the full context of an observation by joining its sensor URI with the metadata record that was valid at the observation's result time. Crucially, when the sensor is later moved, a new metadata version is created — the observation itself is never touched.
