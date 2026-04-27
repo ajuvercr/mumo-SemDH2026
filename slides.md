@@ -271,14 +271,9 @@ These needs translate into three research questions. RQ1 asks how dataspace prin
     <div class="tl-year">2020–21</div>
   </div>
   <div class="tl-event">
-    <div class="tl-label-top">Funding secured;<br>custom hardware &amp; data model</div>
+    <div class="tl-label-top">Funding secured</div>
     <div class="tl-dot v2"></div>
     <div class="tl-year">2022–23</div>
-  </div>
-  <div class="tl-event">
-    <div class="tl-label-top">Field trials;<br>dataspace prototype</div>
-    <div class="tl-dot v2"></div>
-    <div class="tl-year">2022–24</div>
   </div>
   <div class="tl-event">
     <div class="tl-label-top">Production hardware<br>&amp; dataspace</div>
@@ -313,10 +308,10 @@ Data Model · LDES · Solid
 | Need | Component(s) |
 |------|-------------|
 | **Operational oversight** | PHP Dashboard |
-| **Long-term documentation** | Solid Pod + LDES · Investigating Dashboard |
-| **Selective collaboration** | ACL Generator · Solid IdP |
+| **Long-term documentation** | LDES · Investigating Dashboard |
+| **Selective collaboration** | Solid Pod · WAC · Solid IdP |
 
-The **ACL Generator** bridges them: it watches dashboard group changes and materializes WAC policies on the Pod automatically.
+Automatically derive WAC configurations from the PHP dashboard. Changes stay in sync.
 
 <!-- 
 MuMo consists of five runtime components. The PHP dashboard remains the primary operational interface — staff configure sensors, inspect readings, and manage access through it, just as they did before. The Solid Pod hosts the LDES-structured observation data that clients can consume. The ACL Generator is the bridge component: it watches the dashboard's group configuration and materializes Web Access Control policies on demand. The Solid Identity Provider issues WebIDs, and can accept external ones too. Finally, the investigating dashboard is a separate client-side application for longitudinal analysis and cross-source queries.
@@ -445,21 +440,6 @@ MuMo uses Pods as **institution-level endpoints**, not user storage
 
 <!-- 
 Solid is a W3C specification — originally designed for decentralized social applications — that separates three concerns that are usually bundled together. A Solid Pod is just an HTTP server that stores data as linked resources and enforces access control. A WebID is a URL that globally identifies an agent — a person, a software agent, or in MuMo's case, an institution. WAC — Web Access Control — places RDF-based ACL files next to the resources they protect. Any application that has authorization can read the Pod, regardless of which application created the data. MuMo repurposes this: instead of personal storage, Pods act as institutional data endpoints. The Pod represents the museum.
--->
-
----
-
-# Solid in MuMo: the loan workflow
-
-1. Museum B creates a **loan group** in the dashboard, assigns sensors
-2. Museum B grants Museum A's **WebID** access to that group
-3. Museum A authenticates and navigates only the loan subtree
-4. Loan ends → sensors removed from group → **no more data added**
-
-No shared user directory · No data replication
-
-<!-- 
-Here's how Solid handles the loan scenario end-to-end. Museum B creates a dedicated group in its existing dashboard and assigns the sensors near the borrowed painting to it. The ACL Generator watches this configuration change and materializes a WAC file granting Museum A's WebID access to that group's subtree in the Solid Pod. Museum A's investigating dashboard authenticates using its WebID — from its own identity provider — and can now navigate only the loan group fragments. When the loan ends, Museum B removes the sensors from the group. The ACL is updated, and no new data is accessible. No centralized user management, no data replication, no exposure of unrelated monitoring data.
 -->
 
 ---
