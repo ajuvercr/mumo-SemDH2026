@@ -93,7 +93,7 @@ style: |
     margin: 16px 0;
   }
   table {
-    width: 100%;
+    margin: auto;
     border-collapse: collapse;
     font-size: 0.85em;
   }
@@ -243,6 +243,79 @@ MuMo is motivated by three concrete monitoring needs. First, staff need near-con
 
 ---
 
+# Operational oversight
+
+
+<div class="columns">
+<div>
+
+![height:380px](Mona-Lisa.png)
+
+</div>
+<div>
+
+**Stable conditions** — all sensors within range
+
+- Temperature: 19 °C
+- Relative humidity: 52%
+- Light: 45 lux
+
+</div>
+</div>
+
+<style scoped>
+    p:has(img) { text-align: center; }
+
+</style>
+
+---
+
+# A window is left open
+
+<div class="columns">
+<div >
+
+![height:380px](Mona-Lisa-Sad.png)
+
+</div>
+<div>
+
+**Alert: Humidity spike detected**
+
+- Relative humidity: **78%** (limit: 65%)
+- Sensor: Node 7 — Loan Room B
+
+</div>
+</div>
+
+<style scoped>
+    p:has(img) { text-align: center; }
+</style>
+---
+
+# Window closed — conditions restored
+
+<div class="columns">
+<div>
+
+![height:380px](Mona-Lisa-Happy.png)
+
+</div>
+<div>
+
+**Resolved: back to normal**
+
+- Relative humidity: 55%
+- Response time: 12 minutes
+
+</div>
+</div>
+
+<style scoped>
+    p:has(img) { text-align: center; }
+</style>
+---
+
 # Research questions
 
 **RQ1** — How can existing monitoring infrastructure be extended to publish sensor data in a **semantically described, interoperable** way — without replacing it?
@@ -308,10 +381,10 @@ Data Model · LDES · Solid
 | Need | Component(s) |
 |------|-------------|
 | **Operational oversight** | PHP Dashboard |
-| **Long-term documentation** | LDES · Investigating Dashboard |
-| **Selective collaboration** | Solid Pod · WAC · Solid IdP |
+| **Long-term documentation** | Web pages (HTTP) · Investigating Dashboard |
+| **Selective collaboration** | Authentication · Access Control |
 
-Automatically derive WAC configurations from the PHP dashboard. Changes stay in sync.
+Web pages structured for machine navigation. Authentication without a shared user directory. Changes stay in sync with the dashboard.
 
 <!-- 
 MuMo consists of five runtime components. The PHP dashboard remains the primary operational interface — staff configure sensors, inspect readings, and manage access through it, just as they did before. The Solid Pod hosts the LDES-structured observation data that clients can consume. The ACL Generator is the bridge component: it watches the dashboard's group configuration and materializes Web Access Control policies on demand. The Solid Identity Provider issues WebIDs, and can accept external ones too. Finally, the investigating dashboard is a separate client-side application for longitudinal analysis and cross-source queries.
@@ -336,45 +409,9 @@ MuMo uses RDF as the underlying data model, grounded in two established standard
 
 ---
 
-# Data model: example
-
-<div class="columns">
-<div>
-
-**Observation** *(fast)*
-```turtle
-<obs/e1f3> a sosa:Observation ;
-  sosa:madeBySensor <sensors/node-7/temperature> ;
-  sosa:observedProperty <prop/temperature> ;
-  sosa:hasSimpleResult "21.4"^^xsd:decimal ;
-  sosa:resultTime "2026-03-15T10:00:00Z" .
-```
-
-</div>
-<div>
-
-**Sensor metadata** *(slow)*
-```turtle
-<sensors/node-7/v2> a sosa:Platform ;
-  dcterms:isVersionOf <sensors/node-7> ;
-  dcterms:modified "2026-02-01T00:00:00Z" ;
-  rdfs:label "Node 7 – Loan Room B" ;
-  crm:P55_has_current_location <locations/room-b> .
-
-<sensors/node-7/v2/temperature> a sosa:Sensor ;
-  sosa:isHostedBy <sesnors/node-7/v2> .
-```
-
-</div>
-</div>
-
-<!-- 
-Here's a concrete example of what the data looks like. On the left, an observation: it records which sensor made it, what property was observed, the result, and the timestamp. On the right, a versioned sensor metadata record: it says that node-7 was deployed in loan room B between February and June 2025. A client reconstructs the full context of an observation by joining its sensor URI with the metadata record that was valid at the observation's result time. Crucially, when the sensor is later moved, a new metadata version is created — the observation itself is never touched.
--->
-
----
-
 # What is LDES?
+
+In MuMo, LDES provides the **web pages** for long-term documentation.
 
 **Linked Data Event Streams** — append-only log, published as a **navigable tree of pages**
 
@@ -390,22 +427,21 @@ LDES is a specification for publishing continuously growing datasets as linked, 
 
 # TREE: navigating to the right data
 
-Links carry **semantic meaning**:
 
-| Relation | Meaning |
-|----------|---------|
-| `tree:EqualToRelation` | subtree where *path* = *value* |
-| `tree:GreaterThanOrEqualToRelation` | subtree for timestamps ≥ *value* |
+Each link states **what data lives beneath it**
 
-Clients **prune** irrelevant branches before fetching
+Clients read the label and **skip entire subtrees** that cannot match — no full scan needed
 
-> Selective access **becomes** a navigation problem, not a query problem
 
-<!-- 
-The TREE specification defines how fragment relations are expressed. Each relation has a type, a path — the RDF property being filtered on — and a value. An EqualToRelation says: everything under this link has sosa:madeBySensor equal to sensor-1. A client that wants data for sensor-2 simply ignores that branch entirely. This is what makes LDES well suited for cross-institutional settings: providers don't need to implement bespoke query APIs. The structure of the data itself is the query interface.
--->
+![](./LDES.png)
 
----
+> Navigation replaces querying — no custom API needed
+
+<style scoped>
+    p:has(img) { text-align: center; }
+</style>
+
+--- 
 
 # LDES in MuMo
 
@@ -427,6 +463,8 @@ In MuMo, observations are fragmented along the three dimensions that museum staf
 ---
 
 # What is Solid?
+
+In MuMo, Solid provides **authentication and access control** — with WAC — for selective collaboration.
 
 Decouples **storage · identity · access control** from applications
 
@@ -452,17 +490,6 @@ A longitudinal monitoring query across a museum loan
 
 ---
 
-# Faro — operational partner
-
-**Vlaams steunpunt voor cultureel erfgoed** — Flemish support centre for cultural heritage
-
-- Owns a fleet of MuMo loggers, lent to museums to **trial the system** or **supplement existing infrastructure**
-- Museums can query across Faro's Pod and their own — the investigating dashboard **combines multiple sources** in one view
-
-> The demo below uses data from the Faro Pod, but the same query interface works across any number of independent deployments
-
----
-
 # Building the query
 
 **Scenario**: an artwork moves from *faro-mini-003* (home institution) to *faro-01* (loan site) around April 19.
@@ -476,7 +503,53 @@ Only matching **LDES tree branches** are traversed — irrelevant fragments are 
 
 > A **collection management system** already records object movements and dates. This query could be auto-generated from those records.
 
---- 
+---
+
+# Two independent institutions, one view
+
+<div style="display: flex; justify-content: space-around; align-items: center; margin-top: 32px; gap: 16px;">
+
+<div style="border: 2px solid #0f3460; border-radius: 10px; padding: 16px 24px; text-align: center; min-width: 180px;">
+<div style="font-weight: bold; color: #0f3460; margin-bottom: 6px;">faro-mini-003</div>
+<div style="font-size: 0.8em; color: #555; margin-bottom: 8px;">Home institution</div>
+<div style="background: #f0f4f8; border-radius: 6px; padding: 6px 12px; font-size: 0.8em;">
+Solid Pod<br><span style="color: #e94560;">LDES stream</span>
+</div>
+</div>
+
+<div style="text-align: center; flex: 1;">
+<div style="font-size: 0.75em; color: #555; margin-bottom: 8px;">authenticated queries</div>
+<div style="background: #e94560; color: white; padding: 10px 24px; border-radius: 8px; display: inline-block; font-size: 0.9em; font-weight: bold;">Investigating<br>Dashboard</div>
+<div style="font-size: 0.75em; color: #555; margin-top: 8px;">no shared infrastructure</div>
+</div>
+
+<div style="border: 2px solid #0f3460; border-radius: 10px; padding: 16px 24px; text-align: center; min-width: 180px;">
+<div style="font-weight: bold; color: #0f3460; margin-bottom: 6px;">faro-01</div>
+<div style="font-size: 0.8em; color: #555; margin-bottom: 8px;">Loan site</div>
+<div style="background: #f0f4f8; border-radius: 6px; padding: 6px 12px; font-size: 0.8em;">
+Solid Pod<br><span style="color: #e94560;">LDES stream</span>
+</div>
+</div>
+
+</div>
+
+<div style="text-align: center; margin-top: 20px; font-size: 0.85em; color: #555; font-style: italic;">
+Each institution serves its own data — the dashboard combines them client-side
+</div>
+
+---
+
+# Faro: a fleet of MuMo loggers
+
+**Faro** — Flemish support centre for cultural heritage
+
+- Owns a fleet of MuMo loggers, lent to museums to trial the system or supplement existing infrastructure
+- Each borrowing museum gets its own Solid Pod endpoint
+- Museums can query across Faro's Pod and their own in a single view
+
+The demo uses data from the Faro Pod — the same query interface works across any number of independent deployments.
+
+---
 
 # Building the query
 
