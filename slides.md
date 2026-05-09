@@ -202,6 +202,7 @@ SemDH 2026 · ESWC · May 10, 2026 · Dubrovnik, Croatia
 
 <div class="logos">
   <img src="images/logo-ugent-white.png" height="48">
+  <img src="images/logo-idlab.png" height="48" style="filter: invert(1);">
   <img src="images/logo-imec-white.svg" height="36">
 </div>
 
@@ -494,6 +495,22 @@ Solid is a W3C specification — originally designed for decentralized social ap
 
 ---
 
+# LDES + Solid: one boundary for two concerns
+
+LDES navigation and Solid access control share the **same group boundary**
+
+- Access granted at the group subtree
+- ACL files generated from dashboard group config
+- New daily fragments are **automatically covered** by existing grants
+
+**Constraint:** the fragmentation strategy limits what access control can express. Finer access requires finer fragments.
+
+<!-- 
+The connection between LDES and Solid is deliberate. We chose a fragmentation strategy that aligns with governance: the group subtree is simultaneously the LDES navigation boundary and the WAC enforcement scope. A grant at the group level covers all descendants automatically — including fragments that don't exist yet. This also means finer-grained access control (per sensor, per hour) would require a correspondingly finer fragmentation strategy — a design constraint, not a bug.
+-->
+
+---
+
 <!-- _class: section-header -->
 
 # The System in Action
@@ -726,6 +743,63 @@ Two real limitations. First, access control expressivity is hard-bounded by the 
 
 ---
 
+# Lessons learned
+
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 24px;">
+
+<div style="background: #f0f4ff; border-radius: 8px; padding: 20px; border-top: 4px solid #0f3460;">
+<div style="font-weight: bold; color: #0f3460; margin-bottom: 10px;">Feasibility beats expressivity</div>
+<div style="font-size: 0.78em; color: #444; line-height: 1.5;">Design for what institutions can configure, not for technical completeness</div>
+</div>
+
+<div style="background: #f0f4ff; border-radius: 8px; padding: 20px; border-top: 4px solid #0f3460;">
+<div style="font-weight: bold; color: #0f3460; margin-bottom: 10px;">Pods as institutional endpoints</div>
+<div style="font-size: 0.78em; color: #444; line-height: 1.5;">Treating Pods as institution endpoints fit museum governance and removed the need for a shared user directory</div>
+</div>
+
+<div style="background: #fff0f3; border-radius: 8px; padding: 20px; border-top: 4px solid #e94560;">
+<div style="font-weight: bold; color: #0f3460; margin-bottom: 10px;">Integration at the point of use</div>
+<div style="font-size: 0.78em; color: #444; line-height: 1.5;">Client-side aggregation was sufficient; a central SPARQL endpoint requires a trusted central operator</div>
+</div>
+
+</div>
+
+<!-- 
+These are the three lessons from Section 6 most relevant for a Semantic Web audience. First: the right granularity of access control is determined by organizational practice, not technical capability. Second: Solid's design intent (user-centric) can be productively repurposed at the institution level. Third: client-side integration via LDES avoids the single-point-of-control problem of a centralized SPARQL endpoint, at the cost of query expressiveness that was never needed in practice.
+-->
+
+---
+
+# Digital Humanities implications
+
+<div class="columns" style="margin-top: 20px;">
+<div>
+
+**Many DH projects share this structure**
+
+- Data collected continuously, embedded in **legacy systems**
+- Long-lived datasets under **distributed governance**
+- Collaborations are often **temporary**: loans, joint projects, funded phases
+
+</div>
+<div>
+
+**The same approach works elsewhere**
+
+- Decentralized publication
+- Shared semantic models
+- Selective, revocable access
+- No rip-and-replace
+
+</div>
+</div>
+
+<!-- 
+Section 7 of the paper makes this argument explicitly. The contribution of MuMo to Digital Humanities is not a new dataset but a tested architectural pattern: that dataspace-oriented approaches can be deployed incrementally alongside legacy systems, preserving institutional autonomy while enabling cross-institutional reuse. The same pattern applies to annotations, evolving collection metadata, or any DH data that is continuously produced and institutionally governed.
+-->
+
+---
+
 # Conclusion
 
 - **RQ1** — LDES + SSN/SOSA extend the existing dashboard for interoperable, semantically described publication — **without replacing** any operational tooling
@@ -759,5 +833,6 @@ Investigating dashboard: https://museummonitoring.github.io/graphs/
 
 <div class="logos">
   <img src="images/logo-ugent-white.png" height="48">
+  <img src="images/logo-idlab.png" height="48" style="filter: invert(1);">
   <img src="images/logo-imec-white.svg" height="36">
 </div>
