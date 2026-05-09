@@ -22,10 +22,10 @@ pandoc:
 	latexmk -pdf -shell-escape -interaction=nonstopmode -bibtex main.tex
 
 slides:
-	marp slides.md --pdf -o slides.pdf --allow-local-files
+	marp slides.md --pdf -o slides.pdf --allow-local-files --html
 
 web:
-	marp slides.md -o index.html --allow-local-files
+	marp slides.md -o index.html --allow-local-files --html
 
 # Build a PDF into OUTDIR (keeps your project root clean)
 $(OUTDIR)/%.pdf: %.tex | $(OUTDIR)

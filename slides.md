@@ -19,6 +19,8 @@ style: |
   section.title {
     background: #16213e;
     color: #ffffff;
+    display: flex;
+    flex-direction: column;
     justify-content: flex-start;
   }
   section.title h1 {
@@ -185,6 +187,11 @@ style: |
 
 <!-- _class: title -->
 
+<style scoped>
+section { position: relative; }
+.logos { position: absolute; bottom: 32px; right: 64px; display: flex; gap: 24px; align-items: center; }
+</style>
+
 # Museum Monitoring: an Environmental Monitoring Dataspace Using The Things Network, Solid, and LDES
 
 **Arthur Vercruysse¹ · Ben De Meester¹ · Julián Rojas¹ · Dieter Suls²**
@@ -192,6 +199,11 @@ style: |
 ¹ IDLab, Ghent University – imec &nbsp;·&nbsp; ² Fashion Museum Antwerp (MoMu)
 
 SemDH 2026 · ESWC · May 10, 2026 · Dubrovnik, Croatia
+
+<div class="logos">
+  <img src="images/logo-ugent-white.png" height="48">
+  <img src="images/logo-imec-white.svg" height="36">
+</div>
 
 <!-- 
 Welcome. This talk reports on MuMo — Museum Monitoring — a three-year applied research project funded by the Flemish Government. The project explored how dataspace principles can make environmental monitoring data in museums more reusable and shareable, without forcing museums to replace the tools they already depend on.
@@ -490,64 +502,129 @@ A longitudinal monitoring query across a museum loan
 
 ---
 
-# Building the query
+# The loan scenario
 
-**Scenario**: an artwork moves from *faro-mini-003* (home institution) to *faro-01* (loan site) around April 19.
+**An artwork travels from Museum A to Museum B** 
+Sensors lent by Faro (Flemish support centre for cultural heritage)
 
-The query is an **OR of two AND-groups** — one per leg of the object's journey:
+<div style="display: flex; justify-content: space-around; align-items: center; margin-top: 24px; margin-bottom: 24px; gap: 24px;">
 
-- **Top group**: faro-01 nodes · after April 19
-- **Bottom group**: faro-mini-003 · April 12 – 19
-
-Only matching **LDES tree branches** are traversed — irrelevant fragments are never fetched.
-
-> A **collection management system** already records object movements and dates. This query could be auto-generated from those records.
-
----
-
-# Two independent institutions, one view
-
-<div style="display: flex; justify-content: space-around; align-items: center; margin-top: 32px; gap: 16px;">
-
-<div style="border: 2px solid #0f3460; border-radius: 10px; padding: 16px 24px; text-align: center; min-width: 180px;">
-<div style="font-weight: bold; color: #0f3460; margin-bottom: 6px;">faro-mini-003</div>
-<div style="font-size: 0.8em; color: #555; margin-bottom: 8px;">Home institution</div>
-<div style="background: #f0f4f8; border-radius: 6px; padding: 6px 12px; font-size: 0.8em;">
-Solid Pod<br><span style="color: #e94560;">LDES stream</span>
-</div>
+<div style="border: 2px solid #0f3460; border-radius: 10px; padding: 16px 24px; text-align: center; min-width: 160px;">
+<div style="font-size: 0.75em; color: #888; margin-bottom: 4px;">logger: faro-mini-003</div>
+<div style="font-weight: bold; color: #0f3460; font-size: 1.05em;">Museum A</div>
+<div style="font-size: 0.8em; color: #555; margin-top: 6px;">Apr 12 – 19</div>
 </div>
 
-<div style="text-align: center; flex: 1;">
-<div style="font-size: 0.75em; color: #555; margin-bottom: 8px;">authenticated queries</div>
-<div style="background: #e94560; color: white; padding: 10px 24px; border-radius: 8px; display: inline-block; font-size: 0.9em; font-weight: bold;">Investigating<br>Dashboard</div>
-<div style="font-size: 0.75em; color: #555; margin-top: 8px;">no shared infrastructure</div>
+<div style="text-align: center; color: #555;">
+<div style="font-size: 2em;">🖼️</div>
+<div style="font-size: 0.8em; margin-top: 4px;">→ on loan →</div>
 </div>
 
-<div style="border: 2px solid #0f3460; border-radius: 10px; padding: 16px 24px; text-align: center; min-width: 180px;">
-<div style="font-weight: bold; color: #0f3460; margin-bottom: 6px;">faro-01</div>
-<div style="font-size: 0.8em; color: #555; margin-bottom: 8px;">Loan site</div>
-<div style="background: #f0f4f8; border-radius: 6px; padding: 6px 12px; font-size: 0.8em;">
-Solid Pod<br><span style="color: #e94560;">LDES stream</span>
-</div>
+<div style="border: 2px solid #0f3460; border-radius: 10px; padding: 16px 24px; text-align: center; min-width: 160px;">
+<div style="font-size: 0.75em; color: #888; margin-bottom: 4px;">logger: faro-01</div>
+<div style="font-weight: bold; color: #0f3460; font-size: 1.05em;">Museum B</div>
+<div style="font-size: 0.8em; color: #555; margin-top: 6px;">Apr 19 – 23</div>
 </div>
 
 </div>
 
-<div style="text-align: center; margin-top: 20px; font-size: 0.85em; color: #555; font-style: italic;">
-Each institution serves its own data — the dashboard combines them client-side
+<div style="text-align: center; margin-top: 24px; font-size: 0.9em; font-weight: bold; color: #0f3460;">
+Goal: one continuous environmental graph from a single query
 </div>
 
 ---
 
-# Faro: a fleet of MuMo loggers
+# Deployed architecture
 
-**Faro** — Flemish support centre for cultural heritage
+<div style="display: grid; grid-template-columns: 215px 48px 1fr; grid-template-rows: auto auto; gap: 20px 8px; align-items: center; margin-top: 20px;">
 
-- Owns a fleet of MuMo loggers, lent to museums to trial the system or supplement existing infrastructure
-- Each borrowing museum gets its own Solid Pod endpoint
-- Museums can query across Faro's Pod and their own in a single view
+<div style="grid-row: 1 / 3; background: #e94560; color: white; padding: 18px 12px; border-radius: 10px; text-align: center; font-weight: bold; line-height: 1.4; font-size: 0.9em;">Investigating<br>Dashboard</div>
 
-The demo uses data from the Faro Pod — the same query interface works across any number of independent deployments.
+<div style="font-size: 1.4em; text-align: center; color: #555;">→</div>
+<div>
+<div style="font-size: 0.72em; color: #888; margin-bottom: 6px; font-weight: bold;">Museum A · faro-mini-003</div>
+<div style="display: flex; align-items: center; gap: 4px; font-size: 0.73em; flex-wrap: wrap;">
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">root</div>
+<div style="background: #fff0f3; border: 2px solid #e94560; border-radius: 8px; padding: 4px 10px; font-size: 1.5em; line-height: 1;">🔒</div><span style="color: #888; margin: 0 2px;">→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">group</div>
+<span>→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">sensor</div>
+<span>→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">Apr 12</div>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">Apr 13</div>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">Apr 14</div>
+<span style="color: #888;">…</span>
+</div>
+</div>
+
+<div style="font-size: 1.4em; text-align: center; color: #555;">→</div>
+<div>
+<div style="font-size: 0.72em; color: #888; margin-bottom: 6px; font-weight: bold;">Museum B · faro-01</div>
+<div style="display: flex; align-items: center; gap: 4px; font-size: 0.73em; flex-wrap: wrap;">
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">root</div>
+<div style="background: #fff0f3; border: 2px solid #e94560; border-radius: 8px; padding: 4px 10px; font-size: 1.5em; line-height: 1;">🔒</div><span style="color: #888; margin: 0 2px;">→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">group</div>
+<span>→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">sensor</div>
+<span>→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">Apr 19</div>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">Apr 20</div>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">Apr 21</div>
+<span style="color: #888;">…</span>
+</div>
+</div>
+
+</div>
+
+<div style="margin-top: 20px; font-size: 0.77em; color: #666; font-style: italic;">🔒 ACL gate — each museum controls who can traverse its LDES (sub)tree</div>
+
+---
+
+# Query-driven traversal
+
+<div style="display: grid; grid-template-columns: 215px 48px 1fr; grid-template-rows: auto auto; gap: 20px 8px; align-items: center; margin-top: 20px;">
+
+<div style="grid-row: 1 / 3; background: #e94560; color: white; padding: 18px 12px; border-radius: 10px; text-align: center; font-weight: bold; line-height: 1.4; font-size: 0.9em;">Investigating<br>Dashboard</div>
+
+<div style="font-size: 1.4em; text-align: center; color: #555;">→</div>
+<div>
+<div style="font-size: 0.72em; color: #888; margin-bottom: 6px; font-weight: bold;">Museum A · faro-mini-003</div>
+<div style="display: flex; align-items: center; gap: 4px; font-size: 0.73em; flex-wrap: wrap;">
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">root</div>
+<div style="background: #fff0f3; border: 2px solid #e94560; border-radius: 8px; padding: 4px 10px; font-size: 1.5em; line-height: 1;">🔒</div><span style="color: #888; margin: 0 2px;">→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">group</div>
+<span>→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">sensor</div>
+<span>→</span>
+<div style="background: #c8f0c8; border: 1px solid #4caf50; padding: 5px 9px; border-radius: 5px; font-weight: bold; color: #1a6e1a;">Apr 12</div>
+<div style="background: #c8f0c8; border: 1px solid #4caf50; padding: 5px 9px; border-radius: 5px; font-weight: bold; color: #1a6e1a;">Apr 13</div>
+<div style="background: #c8f0c8; border: 1px solid #4caf50; padding: 5px 9px; border-radius: 5px; font-weight: bold; color: #1a6e1a;">… 18</div>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px; color: #bbb;">Apr 20</div>
+<span style="color: #ccc;">…</span>
+</div>
+</div>
+
+<div style="font-size: 1.4em; text-align: center; color: #555;">→</div>
+<div>
+<div style="font-size: 0.72em; color: #888; margin-bottom: 6px; font-weight: bold;">Museum B · faro-01</div>
+<div style="display: flex; align-items: center; gap: 4px; font-size: 0.73em; flex-wrap: wrap;">
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">root</div>
+<div style="background: #fff0f3; border: 2px solid #e94560; border-radius: 8px; padding: 4px 10px; font-size: 1.5em; line-height: 1;">🔒</div><span style="color: #888; margin: 0 2px;">→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">group</div>
+<span>→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px;">sensor</div>
+<span>→</span>
+<div style="background: #e8eef8; border: 1px solid #b0c0d8; padding: 5px 9px; border-radius: 5px; color: #bbb;">Apr 18</div>
+<div style="background: #c8f0c8; border: 1px solid #4caf50; padding: 5px 9px; border-radius: 5px; font-weight: bold; color: #1a6e1a;">Apr 19</div>
+<div style="background: #c8f0c8; border: 1px solid #4caf50; padding: 5px 9px; border-radius: 5px; font-weight: bold; color: #1a6e1a;">Apr 20</div>
+<div style="background: #c8f0c8; border: 1px solid #4caf50; padding: 5px 9px; border-radius: 5px; font-weight: bold; color: #1a6e1a;">… 23</div>
+<span style="color: #ccc;">…</span>
+</div>
+</div>
+
+</div>
+
+<div style="margin-top: 16px; font-size: 0.8em; color: #444; font-style: italic;">Only pages within the query's time range are fetched — irrelevant branches are pruned before download.</div>
 
 ---
 
@@ -665,6 +742,11 @@ To summarize. MuMo demonstrates that dataspace principles can be deployed increm
 
 <!-- _class: title -->
 
+<style scoped>
+section { position: relative; }
+.logos { position: absolute; bottom: 32px; right: 64px; display: flex; gap: 24px; align-items: center; }
+</style>
+
 # Thank You
 
 Arthur Vercruysse · Ben De Meester · Julián Rojas · Dieter Suls
@@ -674,3 +756,8 @@ Project: https://faro.be/project/museum-monitoring-tool
 Investigating dashboard: https://museummonitoring.github.io/graphs/
 
 *Questions?*
+
+<div class="logos">
+  <img src="images/logo-ugent-white.png" height="48">
+  <img src="images/logo-imec-white.svg" height="36">
+</div>
