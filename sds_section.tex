@@ -1,0 +1,242 @@
+% !TEX root = ../PhD.tex
+
+\section{SDS}\label{sec:sds}
+
+\noindent\textit{Multiple datasets can be derived from the same data, by
+transforming the objects on the incoming data stream. We want to give query
+processors transparency in how these datasets are related and what they
+contain. In this section, we introduce the Smart Data Specification for
+Semantically Describing Streams (SDS) to annotate datasets with provenance
+information, describing the consumed stream and the applied transformations
+on that stream. We demo the execution of a pipeline that transforms a Linked
+Data Event Stream and publishes the data in a different structure as
+described in the SDS description. The SDS vocabulary and application profile
+bring together DCAT-AP, LDES and P-Plan.}
+\vspace{1em}
+
+\subsection{Introduction}
+
+Data portals publish live datasets derived from streams. Streams are often
+related to other streams by transforming their data. This leads to problems
+when datasets are not accompanied by provenance information: the data portal
+has difficulty knowing whether or not this data is already published. Also,
+during dataset selection, query agents are clueless as to what interfaces
+provide the same underlying data and, as a fallback, they query the same
+data multiple times.
+
+For example, in a GPS application that notifies the user about changes in
+routes due to construction sites, multiple (query) interfaces can be used. A
+time-based interface makes it easy to track the latest changes. On the other
+hand, a geospatial-based interface makes it easy to calculate whether or not
+a construction site will be encountered on a route. A SPARQL endpoint can
+fulfil both interfaces, but SPARQL carries high operation costs and may
+leave the users with low availability~\cite{SPARQL}. Linked Data Event
+Streams (LDES) alleviate these high costs by publishing static web resources
+that can be easily cached~\cite{LDES}. Each stream can be fragmented in a
+different way to accommodate the needs of the users.
+
+Tailoring dataset interfaces to particular needs results in a plethora of
+interfaces, which makes well-defined provenance a necessity. The provenance
+should cover the two steps a query agent takes to query an
+interface~\cite{QueryDiscovery1,QueryDiscovery2}:
+
+\begin{enumerate}
+  \item \emph{Dataset discovery}: based on whether a dataset is going to
+    contain statements that contribute to solving the query
+  \item \emph{Interface discovery}: selecting the right interface that
+    publishes the dataset
+\end{enumerate}
+
+We set up a new interface for the Belgian street name registry and
+demonstrate that a query agent can find the optimal interface to execute
+particular queries.
+
+\subsection{Related Work}
+
+\textbf{DCTerms, DCAT and VoID:} Exposing metadata about datasets is long
+established. Dublin Core Terms (DCTerms) can be used to provide basic
+information about resources, providing terms like \emph{title},
+\emph{author}, \emph{description} and \emph{subject}~\cite{DCTerms}. Data
+Catalog Vocabulary (DCAT) is designed to facilitate interoperability between
+data catalogs published on the web~\cite{DCAT}. DCAT also provides terms
+like \emph{license}, which makes it possible to define a new license for an
+interface. The Vocabulary of Interlinked Datasets (VoID) focuses on
+explicitly linking datasets together on some predicate and defining subset
+datasets~\cite{VOID}.
+
+\textbf{LDES:} Linked Data Event Streams is a way of exposing an
+ever-growing set of immutable objects. These objects can be divided into
+fragments as HTTP resources that are linked together with the TREE
+specification. Fragmentations are used to provide semantic meaning to links
+between HTTP resources. Each HTTP resource can, for example, hold all items
+that start with a particular letter. A view description is used to define
+the meaning of the fragments and their links~\cite{LDES}.
+
+\textbf{VoCaLS:} Vocabulary of interoperable streams \& On a Web of Data
+Streams extends the ideas of DCAT with more information about streaming
+data~\cite{VoCaLS}. That work defines a stream slightly differently than in
+this section. VoCaLS focuses on streams that generate high throughput
+updates, which requires processors to use a windowing mechanism. Here, a
+stream is seen more broadly as a growing collection of objects, updates or
+otherwise.
+
+\textbf{P-Plan and PROV-O:} The Ontology for Provenance and Plans (P-Plan)
+is an extension of the PROV-O ontology~\cite{PROVO} created to represent the
+plans that guide the execution of scientific processes. P-Plan describes how
+plans are composed. This information can be used to keep track of a
+provenance tree~\cite{PPLAN}.
+
+\subsection{The Smart Data Specification for Semantically Describing
+Streams (SDS)}
+
+A stream in the context of the Smart Data Specification for Semantically
+Describing Streams (SDS) is a \emph{physical} live channel that carries
+updates or items. A dataset can be derived from a stream as the collection
+of all updates or items. A \emph{physical} channel can be any medium such as
+a Kafka stream, a WebSocket stream, or even a file where updates are
+appended. A stream can carry any kind of data: CSV rows, mutable or
+immutable linked data objects, video stream chunks, etc.
+
+A stream can be derived from a transformation applied to items of a
+different stream. This transformation is described with \texttt{p-plan} and
+resides in the SDS description of the resulting stream. The stream and the
+transformation correspond with \texttt{p-plan:Entity} and
+\texttt{p-plan:Activity} respectively, as shown in the pink part of
+Figure~\ref{fig:sds-onto}. The transformation links to the previous stream
+with the \texttt{prov:used} predicate. With the power of \texttt{p-plan},
+query agents can understand how datasets are linked and what interface fits
+a specific query the best.
+
+The SDS description also links to metadata about the resulting data with
+the \texttt{sds:dataset} predicate. This makes modifying the datasets'
+metadata possible after a transformation, represented as the green part in
+Figure~\ref{fig:sds-onto}.
+
+A \texttt{sds:Stream} should describe the type of objects it is carrying.
+First, the stream can use the \texttt{sds:carries} predicate that points to
+the type of the \texttt{sds:Records} it is carrying (see below). Next, the
+stream can describe the SHACL shape with \texttt{sds:shape} that these
+members adhere to, which can only be used if the stream carries linked data
+objects.
+
+Linking specific items to the correct stream is done with
+\texttt{sds:Record} objects. An \texttt{sds:Record} points to the data
+(\texttt{sds:payload}) and the corresponding stream (\texttt{sds:stream}).
+These small objects make it possible for multiple streams to use the same
+channel. Each transformation can thus push \texttt{sds:Record} objects and
+leave the original stream intact. A stream of immutable objects can still be
+transformed, for example, to calculate a hash or add a fragment id to the
+\texttt{sds:Record} object. The yellow part of Figure~\ref{fig:sds-onto}
+gives a visual overview of \texttt{sds:Record}.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{sds_ontology.png}
+  \caption{Visual representation of the SDS Ontology. The colored boxes
+    have no semantic meaning and are only used for clarity.}
+  \label{fig:sds-onto}
+\end{figure}
+
+\subsection{Demo}
+
+Data published with Linked Data Event Streams can be partitioned or
+fragmented in a multitude of ways. This helps query agents resolve their
+queries as fast as possible whilst ingesting as little data as possible. A
+default fragmentation constitutes a timestamp fragmentation, which allows
+clients to replicate and synchronize the dataset efficiently. A substring
+fragmentation, on the other hand, makes autocompletion more
+efficient~\cite{Substring}.
+
+In this demo, we set up a pipeline starting from an existing LDES that
+exposes the registry of street names with a timestamp fragmentation. The
+pipeline calculates a substring fragmentation based on the name of the
+street and exposes a new LDES with the corresponding SDS description and
+substring fragmentation. The published \texttt{tree:View}s can then be
+associated with their respective \texttt{viewDescription}, as shown in
+Listing~\ref{lst:sds-example}.
+
+\begin{lstlistingsp}[language=ttl,caption={RDF sample creating two LDES Views from different Streams},label={lst:sds-example},basicstyle=\ttfamily\scriptsize]
+@prefix ex:     <http://example.org/ns#>.
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ldes:   <https://w3id.org/ldes#>.
+@prefix p-plan: <http://purl.org/net/p-plan#> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix sds:    <https://w3id.org/sds#> .
+
+ex:MyLDES a ldes:EventStream;
+  dcat:title "An example LDES".
+
+# One fragmentation is based on an existing LDES
+ex:BasicFragmentation a tree:ViewDescription ;
+  dcat:endpointURL </basic> ; # A rootnote from which you can access all members
+  dcat:servesDataset ex:MyLDES ; # the LDES
+  # This viewDescription was created by importing this stream
+  ldes:managedBy sds:LDESStream.
+
+# The other fragmentation bucketizes the members before publishing
+ex:SubstringFragmentation a tree:ViewDescription ;
+  dcat:endpointURL </substring> ; # A rootnote from which you can access all members
+  dcat:servesDataset ex:MyLDES ; # the LDES
+  # This viewDescription was created by importing this stream
+  ldes:managedBy sds:BucketizedStream.
+
+
+ex:ImportLDES a p-plan:Activity;
+  rdfs:comment "Reads csv file and converts to rdf members";
+  prov:used <https://smartdata.dev-vlaanderen.be/base/gemeente>.
+
+ex:LDESStream a sds:Stream;
+  p-plan:wasGeneratedBy ex:ImportLDES;
+  sds:carries sds:Member.
+
+
+ex:BucketizeStrategy a ldes:BucketizeStrategy;
+    ldes:bucketType ldes:SubstringFragmentation;
+    tree:path rdfs:label;
+    ldes:pageSize 50.
+
+ex:BucketizeStream a p-plan:Activiy;
+  rdfs:comment "Execute a substring bucketization on the incoming stream";
+  prov:used ex:LDESStream, ex:BucketizeStrategy.
+
+ex:BucketizedStream a sds:Stream;
+  p-plan:wasGeneratedBy ex:BucketizeStream;
+  sds:carries sds:Member.
+\end{lstlistingsp}
+
+When asking a query agent ``What are the 10 latest updated street names?''
+starting from the newly created LDES, the query agent can derive from the
+SDS description that the current LDES is not suitable for this query. This
+query would require the query agent to request the entire LDES tree and
+manually find the 10 latest updates, whereas following the links from the
+SDS description back to the original LDES, this query would only require a
+few HTTP requests: one to get the SDS description and another to get the
+latest updates due to the timestamp-based fragmentation.
+
+To execute this pipeline we use a proof-of-concept pipeline runner called
+Nautirust~\cite{Nautirust}. This makes it easy to start the three required
+processes with the correct arguments: read the original LDES with an LDES
+client, add buckets to the SDS Records, and ingest the new SDS records in an
+LDES server.
+
+\subsection{Conclusion}
+
+With the introduction of the SDS ontology, it is possible to add a
+description to a stream and the resulting dataset, adding provenance
+information. The provenance links streams together and the transformations
+applied to them. The SDS ontology aligns well with long-established
+ontologies like DCAT and P-Plan to maximize interoperability.
+
+With the SDS description, the query agent can now automatically select the
+right dataset and interface based on a given query.
+
+Federated query processors that utilize source selection based on this
+provenance information when selecting a dataset and interface to query were
+still future work at the time of the original 2022 demo paper.
+
+\subsection{Revisiting SDS Against the Current State of Play}
+
+\todo{Compare the SDS vocabulary (2022) against how LDES/DCAT-AP/dataset-provenance
+tooling has evolved since; note what has changed in the ecosystem, whether
+the federated source-selection future work materialized, and how SDS relates
+to MuMo's own use of LDES and provenance today.}

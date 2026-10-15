@@ -1,0 +1,94 @@
+% !TEX root = ../PhD.tex
+%
+% Bridge section: not part of the original publication.
+% Describes the RDF-Connect pipelines behind MuMo, as found in
+% mumo-full/pipeline/pipeline/{pipeline.ttl,auth-pipeline.ttl} with
+% @rdfc/sds-processors-ts 2.0.2-alpha.1.
+
+\section{Discussion in the context of this dissertation}\label{sec:mumo-dissertation}
+
+\noindent\textit{%
+    This section is not part of the original publication.
+    It describes the RDF-Connect pipelines that MuMo runs on,
+    which the publication leaves implicit,
+    and relates the deployment to the research questions of this dissertation.
+}
+
+\subsection{Contribution to the research questions}
+
+The publication describes MuMo from the point of view of the museums that use it.
+Its data path (Section~\ref{sec:implementation}) starts with ``a measurement is ingested'',
+and leaves out how a measurement becomes part of a Linked Data Event Stream.
+That step is an RDF-Connect pipeline (Chapter~\ref{ch:rdf-connect}).
+MuMo is therefore where this dissertation tests RQ1 and RQ2 outside a demonstration:
+the pipeline runs unattended, polls its sources every five seconds,
+and keeps its state across restarts.
+MuMo does not test RQ3, since it shows nothing about how the pipeline description was written.
+
+\subsection{The MuMo pipelines}
+
+The data pipeline has two branches, one for sensors and one for observations,
+which run as eleven processor instances in a single Node.js runner.
+Each branch has the same five stages.
+\begin{enumerate}
+    \item \texttt{MumoFetch} polls the history endpoint of the MuMo dashboard
+        and saves its position, so that a restart resumes instead of reprocessing.
+    \item \texttt{MumoMapper} maps the dashboard's JSON to RDF:
+        platforms and sensors in SOSA with their current location in CIDOC-CRM,
+        and observations following ISO~19156 with QUDT units (Section~\ref{sec:datamodel}).
+    \item \texttt{Sdsify} wraps every member in an \texttt{sds:Record}
+        for a stream identifier named in the pipeline description,
+        together with a SHACL shape that delimits each member.
+    \item \texttt{Bucketize} fragments the stream according to strategies declared in RDF.
+        Observations are fragmented by the location of the sensor's platform, by platform,
+        and by time (year, month, day, hour, and minute);
+        sensors are fragmented by location.
+        This is the fragmentation hierarchy of Section~\ref{fragmentation-as-a-design-lever},
+        and therefore also the unit of access control
+        (Section~\ref{policy-aligned-fragmentation-ldes-solid-together}).
+    \item \texttt{LdesDiskWriter} writes the fragments to disk as an LDES.
+\end{enumerate}
+The governance layer is a second RDF-Connect pipeline.
+It starts the Community Solid Server as a processor that serves the directory the data pipeline writes to,
+the ACL generator of Section~\ref{runtime-components} as another,
+and a processor that issues WebIDs.
+
+For RQ1, the deployment shows how little of a pipeline is specific to its project.
+Of the processor types in the data pipeline,
+only \texttt{MumoFetch} and \texttt{MumoMapper} were written for MuMo:
+they talk to the dashboard and map its JSON.
+\texttt{Sdsify}, \texttt{Bucketize}, \texttt{LdesDiskWriter}, and \texttt{GlobRead}
+are taken unchanged from the processor library,
+the same processors that the pipelines of Section~\ref{sec:usecases} use.
+Everything that concerns streaming, fragmentation, and publication is configuration.
+In particular, the fragmentation that the publication treats as a central design lever
+is a list of strategies in the pipeline description:
+changing how data is fragmented, and with it what can be shared,
+changes RDF and not code.
+
+\subsection{Provenance in the deployment}
+
+For RQ2, the deployment attaches provenance at two levels, through SDS (Section~\ref{sec:sds}).
+Every published item carries a record that names its stream and the buckets it belongs to,
+because \texttt{Bucketize} moves each record from its incoming stream to the stream it produces.
+Every published stream carries a description of how it was derived:
+\texttt{Bucketize} reads the description of its incoming stream,
+adds a \texttt{p-plan:Activity} of type \texttt{ldes:Bucketization}
+that used the incoming stream and the fragmentation strategies, together with its start time,
+and declares the new stream \texttt{prov:wasGeneratedBy} that activity.
+A consumer of a MuMo LDES can therefore find out,
+from the data alone, which stream an observation belongs to and how that stream was fragmented.
+
+The deployment does not yet reach the full chain of Section~\ref{sec:rdfc-sds}, for three reasons.
+First, the description of each incoming stream is read from a static file
+instead of being produced by \texttt{Sdsify}, so the first link is written by hand.
+Second, the stream identifiers in the deployed configuration do not line up:
+the identifier \texttt{Sdsify} assigns is described nowhere,
+and the bucketizer's output stream reuses the identifier of its input,
+so the derivation refers to itself.
+Third, the activity in a stream description is a fresh blank node
+rather than the processor in the orchestrator's PROV-O trace,
+and the deployment does not write that trace.
+Each of these is a matter of configuration or a small change to the SDS processors,
+and none requires a change to the framework.
+\todo{If these three issues are fixed before submission, replace this paragraph with the resulting chain from observation to pipeline.}

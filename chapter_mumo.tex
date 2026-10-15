@@ -1,0 +1,33 @@
+% !TEX root = ../PhD.tex
+
+\graphicspath{{chapter_mumo/images/}}
+\glsresetall % reset usage of all acronyms (glossaries)
+
+\chapter[MuMo]{MuMo}
+\label{ch:mumo}
+
+\renewcommand\evenpagerightmark{{\scshape\small Chapter \arabic{chapter}}}
+\renewcommand\oddpageleftmark{{\scshape\small MuMo}}
+
+\renewcommand{\bibname}{References}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% reset glossaries for chapter
+\glsresetall
+
+\input{chapter_mumo/body}
+\input{chapter_mumo/sds_section}
+\input{chapter_mumo/ldes_client_section}
+\input{chapter_mumo/dissertation_context}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+\renewcommand*{\thesection}{\thechapter.\arabic{section}}   % reset again to chaptnum.sectnum
+
+\bibliographystyle{phdbib}
+\bibliography{chapter_mumo/references,chapter_mumo/sds_references}
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
